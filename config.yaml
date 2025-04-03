@@ -1,0 +1,53 @@
+# Ingestion Settings
+ingestion:
+  max_hours_since_published: 48 # Filter items published within the last X hours
+  feed_limits:
+    # Default limit for feeds not listed below
+    default: 25
+    # Specific limits for high-volume feeds (use lowercase feed URL/name key if possible)
+    # Example (adjust keys based on your actual feed identifiers):
+    "https://huggingface.co/blog/feed.xml": 15
+    "http://feeds.feedburner.com/googleairesearch": 15
+    "http://feeds.feedburner.com/techcrunch/ai": 15
+  # Optional keyword pre-filtering (leave empty or remove to disable)
+  # Only keep items where title OR summary contains at least one keyword (case-insensitive)
+  required_keywords:
+    - AI
+    - LLM
+    - Large Language Model
+    - Google
+    - DeepMind
+    - OpenAI
+    - Claude
+    - GPT
+    - Gemini
+    - MPC
+    - Anthropic
+    - Meta AI
+    - Model
+    - Agent
+    - Transformer
+    - Diffusion
+  # List of feed URLs known to be problematic or to skip
+  skip_feeds:
+    - "https://openai.com/blog/rss.xml" # Example: If consistently failing
+    # Add other known bad/permanently failing URLs here
+
+# Gemini Model Configuration
+gemini_models:
+  FILTERING_MODEL: 'gemini-2.0-flash-lite' # Using user-specified model
+  SUMMARIZATION_LITE_MODEL: 'gemini-2.0-flash-lite' # Using user-specified model
+  ANALYSIS_MODEL: 'gemini-2.0-flash'  # Using user-specified model
+  TUTORIAL_MODEL: 'gemini-2.0-flash' # Using user-specified model
+  # NOTE: Ensure these models are available in your environment/project.
+
+# Optional: Pricing per 1 Million Tokens (Input/Output) - for cost estimation
+# Check current Google AI pricing for the models used. Example values:
+gemini_pricing:
+  'gemini-2.0-flash-lite':
+     input: 0.075 # Fictional Example Price
+     output: 0.30 # Fictional Example Price
+  'gemini-2.0-flash':
+     input: 0.10 # Fictional Example Price
+     output: 0.40 # Fictional Example Price
+#   # Add other models if used 

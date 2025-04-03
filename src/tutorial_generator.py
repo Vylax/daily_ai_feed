@@ -3,9 +3,11 @@ import logging
 import random
 from textwrap import dedent
 import time
+import json # Added for example usage
+import os # Added for example usage
 
-# Assumes Gemini is configured elsewhere
-# from .processing import get_gemini_model
+# Import the centralized Gemini call function and token tracking
+from src.processing import _make_gemini_call_with_tracking
 
 logger = logging.getLogger(__name__)
 
@@ -72,82 +74,90 @@ TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent("""
     Make the tutorial highly pedagogical, actionable, and digestible within 10-15 minutes reading/implementation time. Prioritize clarity, runnable code, and practical explanations over exhaustive detail. Ensure code blocks are complete where possible or clearly indicate dependencies between steps.
 """)
 
-def generate_tutorial(topic, gemini_model, retries=3, delay=10):
-    """Generates a Markdown tutorial for the given topic using Gemini."""
+# Modified signature to accept config
+def generate_tutorial(topic, config):
+    """Generates a Markdown tutorial for the given topic using the configured Gemini model."""
     if not topic:
         logger.error("No topic provided for tutorial generation.")
         return None
-    if not gemini_model:
-        logger.error(f"Gemini model not available for generating tutorial on: {topic}")
-        return None
+
+    # Get the model name from config
+    gemini_config = config.get('gemini_models', {})
+    model_name = gemini_config.get('TUTORIAL_MODEL', 'gemini-2.0-flash') # Default fallback
 
     prompt = TUTORIAL_GENERATION_PROMPT_TEMPLATE.format(topic=topic)
-    logger.info(f"Requesting tutorial generation for topic: {topic}")
-    # logger.debug(f"Tutorial prompt (start):\n{prompt[:500]}...")
+    logger.info(f"Requesting tutorial generation for topic: {topic} using {model_name}")
 
-    for attempt in range(retries):
-        try:
-            # Increase timeout if tutorials are complex and take longer
-            generation_config = genai.types.GenerationConfig(temperature=0.7) # Adjust creativity
-            response = gemini_model.generate_content(prompt, generation_config=generation_config)
+    # Use the centralized call function
+    # Note: GenerationConfig (like temperature) would need to be handled within
+    # _make_gemini_call_with_tracking or passed through if customization is needed per call type.
+    response = _make_gemini_call_with_tracking(
+        model_name=model_name,
+        prompt=prompt,
+        task_description=f"Tutorial Generation ({topic})"
+        # retries=3, delay=10 # Can potentially override defaults here if needed
+    )
 
-            if not response.parts:
-                 logger.warning(f"Gemini tutorial response has no parts for '{topic}' (attempt {attempt + 1}/{retries}). Finish reason: {response.prompt_feedback.block_reason if response.prompt_feedback else 'N/A'}")
-                 if attempt < retries - 1:
-                     time.sleep(delay)
-                     continue
-                 else:
-                     logger.error(f"Gemini tutorial generation failed for '{topic}' after multiple attempts due to empty/blocked response.")
-                     return None # Failed
+    if not response or not response.text:
+        logger.error(f"Gemini call for tutorial generation on '{topic}' failed or returned empty response.")
+        return None
 
-            tutorial_markdown = response.text
-            logger.info(f"Successfully generated tutorial for topic: {topic}")
-            # logger.debug(f"Generated tutorial Markdown (start):\n{tutorial_markdown[:500]}...")
-            return tutorial_markdown
-
-        except Exception as e:
-            logger.error(f"Error generating tutorial for '{topic}' (attempt {attempt + 1}/{retries}): {e}", exc_info=True)
-            if attempt < retries - 1:
-                # Use longer delay for potentially more complex generation tasks
-                time.sleep(delay * (attempt + 1))
-            else:
-                logger.error(f"Failed to generate tutorial for '{topic}' after multiple API errors.")
-                return None # Failed
-
-    return None # Should not be reached
+    tutorial_markdown = response.text
+    logger.info(f"Successfully generated tutorial for topic: {topic}")
+    # logger.debug(f"Generated tutorial Markdown (start):\n{tutorial_markdown[:500]}...")
+    return tutorial_markdown
 
 # --- Example Usage (for testing) ---
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
 
-    # Load config (assuming .env exists)
-    from config_loader import load_config
-    config = load_config()
+    # Load config
+    try:
+        # Assume config_loader is in the parent directory (src)
+        from src.config_loader import load_config
+        config = load_config()
+        if not config:
+            raise ValueError("Failed to load config")
+    except (ImportError, ValueError, FileNotFoundError) as e:
+        print(f"Error loading config: {e}. Using dummy config for testing tutorial_generator.py.")
+        # Define a minimal dummy config for standalone testing
+        config = {
+            'gemini_api_key': os.environ.get("GEMINI_API_KEY"), # Try to get from env var for testing
+            'google_application_credentials': None,
+            'gemini_models': {
+                 'TUTORIAL_MODEL': 'gemini-2.0-flash' # Use correct model name
+            },
+            'initial_tutorial_topics': [
+                "LangGraph basics",
+                "Label Studio intro",
+                "Understanding Attention Mechanisms",
+                "Fine-tuning a small LLM"
+            ]
+        }
+        if not config['gemini_api_key']:
+            print("Warning: GEMINI_API_KEY environment variable not set. Gemini calls may fail.")
 
-    # Configure Gemini
-    from processing import configure_gemini, get_gemini_model
+    # Configure Gemini (needed for the imported tracking function)
+    from src.processing import configure_gemini, reset_token_counts, get_token_counts
     if not configure_gemini(api_key=config.get('gemini_api_key'), credentials_path=config.get('google_application_credentials')):
         print("Exiting due to Gemini configuration failure.")
         exit()
 
-    model = get_gemini_model()
-    if not model:
-        print("Exiting because Gemini model could not be initialized.")
-        exit()
+    # Reset token counts for test run
+    reset_token_counts()
 
     # Load topics from config
     load_tutorial_topics(config.get('initial_tutorial_topics', [
-        "LangGraph basics",
-        "Label Studio intro",
-        "Understanding Attention Mechanisms",
-        "Fine-tuning a small LLM"
-        ]))
+        "Fallback Topic 1", # Provide fallback if config loading failed
+        "Fallback Topic 2"
+    ]))
 
     # Select and generate a tutorial
     selected_topic = select_tutorial_topic()
 
     if selected_topic:
-        generated_markdown = generate_tutorial(selected_topic, model)
+        # Pass config to the function
+        generated_markdown = generate_tutorial(selected_topic, config)
         if generated_markdown:
             print(f"\n--- Generated Tutorial for: {selected_topic} ---")
             print(generated_markdown)
@@ -159,4 +169,9 @@ if __name__ == '__main__':
         else:
             print(f"\nFailed to generate tutorial for {selected_topic}.")
     else:
-        print("\nNo tutorial topic selected.") 
+        print("\nNo tutorial topic selected.")
+
+    # Print final token counts for the test run
+    final_counts = get_token_counts()
+    print("\n--- Token Counts for Test Run ---")
+    print(json.dumps(final_counts, indent=2)) 
