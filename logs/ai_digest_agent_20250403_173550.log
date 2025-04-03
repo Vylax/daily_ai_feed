@@ -1,7 +1,0 @@
-2025-04-03 17:35:50,988 - INFO - __main__ - AI Digest Agent starting up.
-2025-04-03 17:35:50,990 - WARNING - src.config_loader - Unsupported email provider: smtp" # or "sendgrid. Defaulting to 'smtp', but configuration might be missing.
-2025-04-03 17:35:50,990 - INFO - __main__ - Attempting to resend the last digest from outputs/last_digest.html...
-2025-04-03 17:35:51,003 - INFO - src.email_utils - Attempting to send email via smtp...
-2025-04-03 17:35:51,005 - ERROR - src.email_utils - SMTP configuration is incomplete (missing sender, recipient, password, server, or port). Cannot send email.
-2025-04-03 17:35:51,006 - ERROR - __main__ - Failed to resend last digest email.
-2025-04-03 17:35:51,006 - INFO - __main__ - Resend operation complete. Exiting.
