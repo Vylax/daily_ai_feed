@@ -38,10 +38,12 @@ def send_email_smtp(subject, html_body, config):
     
     if missing_config:
         logger.error(f"SMTP configuration is incomplete. Missing: {', '.join(missing_config)}")
+        logger.error("Please check your .env file and ensure all SMTP configuration values are set correctly.")
         return False
 
     if not all([sender_email, receiver_email, password, smtp_server, smtp_port]):
         logger.error("SMTP configuration is incomplete (missing sender, recipient, password, server, or port). Cannot send email.")
+        logger.error("Please check your .env file and ensure all SMTP configuration values are set correctly.")
         return False
 
     message = MIMEMultipart("alternative")

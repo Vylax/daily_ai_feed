@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 def load_config():
     """Loads configuration from .env file and returns it as a dictionary."""
-    load_dotenv() # Load environment variables from .env file
+    load_dotenv(override=True) # Force reload of environment variables from .env file
 
     config = {}
 
@@ -64,37 +64,24 @@ def load_config():
         config['smtp_username'] = os.getenv('SMTP_USERNAME', config.get('sender_email'))
         config['smtp_password'] = os.getenv('SMTP_PASSWORD')
         
-        # Log the SMTP configuration for debugging
+        # Log the SMTP configuration for debugging (without revealing password)
         logger.debug(f"SMTP Configuration loaded: Server={config.get('smtp_server')}, "
                     f"Port={config.get('smtp_port')}, Username={config.get('smtp_username')}")
         
         if not all([config['smtp_server'], config['smtp_port'], config['smtp_password']]):
-            logger.warning("SMTP configuration is incomplete in .env. Using known working Brevo credentials as fallback.")
-            
-            # Fallback to known working Brevo credentials when configuration is missing
-            # This is the same config that works in the tests
-            if not config['smtp_server'] or not config['smtp_password']:
-                logger.info("Using Brevo SMTP fallback configuration")
-                config['smtp_server'] = "smtp-relay.brevo.com"
-                config['smtp_port'] = 587
-                config['smtp_username'] = "8980b5002@smtp-brevo.com"  
-                config['smtp_password'] = "xnqsEAG7g3ObpQPf"  # This should be secured better in production
+            logger.error("SMTP configuration is incomplete in .env file. Please check your .env file and ensure "
+                      "SMTP_SERVER, SMTP_PORT, and SMTP_PASSWORD are set correctly. "
+                      "Email functionality will not work without these values.")
                 
     elif config['email_provider'] == 'sendgrid':
         config['sendgrid_api_key'] = os.getenv('SENDGRID_API_KEY')
         if not config['sendgrid_api_key']:
-            logger.warning("SendGrid API Key not found in .env.")
+            logger.error("SendGrid API Key not found in .env. Please set SENDGRID_API_KEY in your .env file.")
     else:
-        logger.warning(f"Unsupported email provider: '{config['email_provider']}'. Defaulting to 'smtp'.")
-        config['email_provider'] = 'smtp' # Fallback, though likely misconfigured
-        
-        # Use Brevo SMTP as fallback for invalid providers too
-        if not config.get('smtp_server') or not config.get('smtp_password'):
-            logger.info("Using Brevo SMTP fallback configuration after invalid provider")
-            config['smtp_server'] = "smtp-relay.brevo.com"
-            config['smtp_port'] = 587
-            config['smtp_username'] = "8980b5002@smtp-brevo.com"
-            config['smtp_password'] = "xnqsEAG7g3ObpQPf"  # This should be secured better in production
+        logger.error(f"Unsupported email provider: '{config['email_provider']}'. Please set EMAIL_PROVIDER=smtp "
+                  f"or EMAIL_PROVIDER=sendgrid in your .env file. Defaulting to 'smtp', but email functionality "
+                  f"will not work correctly without proper configuration.")
+        config['email_provider'] = 'smtp'
 
     return config
 
