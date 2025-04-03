@@ -50,4 +50,10 @@ gemini_pricing:
   'gemini-2.0-flash':
      input: 0.10 # Fictional Example Price
      output: 0.40 # Fictional Example Price
-#   # Add other models if used 
+#   # Add other models if used
+
+# --- File Paths ---
+processed_urls_filepath: "processed_urls.json" # B.4: Path for deduplication data
+
+# --- Summarization & Analysis Settings ---
+num_news_items_to_summarize: 7 

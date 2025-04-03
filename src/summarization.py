@@ -25,7 +25,7 @@ SUMMARIZATION_LITE_PROMPT_TEMPLATE = dedent("""
 """)
 
 # Prompt for the deeper analysis model, requesting specific fields
-# Updated to reinforce clean output for each field.
+# Updated to reinforce clean output for each field and include project context (B.3)
 ANALYSIS_PROMPT_TEMPLATE = dedent("""
     Analyze the following AI news item for a technical CTO, based on the provided snippet and its initial summary.
     Focus ONLY on information derivable from the text provided.
@@ -42,7 +42,7 @@ ANALYSIS_PROMPT_TEMPLATE = dedent("""
     Provide the following analysis points. Output ONLY the text content for each point, prefixed with the specific label EXACTLY as shown below:
     💡 Key Technical Insight: [Text content derived *only* from the item itself]
     📊 The Competitive Angle: [Text content derived *only* from the item itself]
-    🚀 Your Potential Move: Analyze this item *in the context of the user's current projects* (provided above). If there's a *clear, high-ROI*, and *sensible* application or improvement related to these projects, suggest a *concrete* next step, experiment, or strategic question. Focus on practical relevance. If no specific, valuable project connection exists, output 'No specific project application identified for this item.'
+    🚀 Your Potential Move: Analyze this item's relevance considering the user's current projects (context provided above). If there's a *clear, high-ROI, specific, and sensible* application, improvement, or experiment related to these projects, suggest a *concrete* next step. Otherwise, output 'No specific project application identified for this item.'
 
     Ensure each point starts on a new line. Do NOT include any HTML tags, markdown formatting, or extra explanations.
 """)
@@ -84,13 +84,15 @@ def _extract_analysis_field(text, label):
 def _process_single_item(item, config, project_context):
     """Generates summary & analysis for a single item, returning structured data."""
     gemini_config = config.get('gemini_models', {})
-    # Use 2.0 models as defaults, matching user preference and config
-    lite_model_name = gemini_config.get('SUMMARIZATION_LITE_MODEL', 'gemini-2.0-flash-lite')
-    analysis_model_name = gemini_config.get('ANALYSIS_MODEL', 'gemini-2.0-flash')
+    # Use 2.0 models as defaults, matching user preference and config (Model Reminder)
+    lite_model_name = gemini_config.get('FILTERING_MODEL', 'gemini-2.0-flash-lite') # Changed key name based on likely intent
+    analysis_model_name = gemini_config.get('ANALYSIS_MODEL', 'gemini-2.0-flash') # Changed key name based on likely intent
 
     item_title = item.get('title', 'N/A')
     item_url = item.get('url', 'N/A')
+    # B.4 - Capture source name if available for market pulse later
     item_type = item.get('content_type', 'News') # Default to News
+    source_name = item.get('source_name', item_title) # Use title as fallback for source
 
     # Prepare the snippet
     content_snippet = item.get('justification', item.get('summary', 'No content snippet available.'))
@@ -129,7 +131,7 @@ def _process_single_item(item, config, project_context):
         url=item_url,
         content_snippet=content_snippet,
         basic_summary=basic_summary or "[Summary generation failed]",
-        project_context=project_context or "No project context provided."
+        project_context=project_context or "No project context provided." # Pass context (B.3)
     )
     analysis_response = _make_gemini_call_with_tracking(
         model_name=analysis_model_name,
@@ -163,6 +165,7 @@ def _process_single_item(item, config, project_context):
         'insight': analysis_data['insight'],
         'angle': analysis_data['angle'],
         'move': analysis_data['move'],
+        'source_name': source_name # B.4 / C.7 - Add source name to results
     }
 
     return result_data # Return dictionary
@@ -182,7 +185,7 @@ def summarize_and_analyze(items, config, project_context, num_news, num_tutorial
     Returns:
         A tuple: (list_of_news_data, list_of_tutorial_data)
         Each list contains dictionaries with keys:
-        'url', 'title', 'type', 'summary', 'insight', 'angle', 'move'
+        'url', 'title', 'type', 'summary', 'insight', 'angle', 'move', 'source_name'
     """
     if not items:
         logger.warning("No items provided for summarization.")
@@ -271,7 +274,7 @@ if __name__ == '__main__':
             'gemini_api_key': os.environ.get("GEMINI_API_KEY"), # Try to get from env var for testing
             'google_application_credentials': None,
             'gemini_models': {
-                'SUMMARIZATION_LITE_MODEL': 'gemini-2.0-flash-lite', # Use correct model names
+                'FILTERING_MODEL': 'gemini-2.0-flash-lite', # Use correct model names
                 'ANALYSIS_MODEL': 'gemini-2.0-flash'
             },
             'num_news_items_to_summarize': 2,

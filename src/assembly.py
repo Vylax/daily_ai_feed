@@ -51,31 +51,28 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
     # --- Convert Tutorial Markdown to HTML ---
     generated_tutorial_html = ""
     # Use the passed-in topic, handle None case
-    tutorial_topic_display = selected_tutorial_topic if selected_tutorial_topic else "No custom tutorial today."
-
-    if generated_tutorial_md:
+    tutorial_topic_display = selected_tutorial_topic if selected_tutorial_topic else "No custom tutorial today." [cite: 158]
+    if generated_tutorial_md: # Rename generated_tutorial_md to generated_tutorial_html
         try:
-            # Use markdown library to convert. Enable extensions for better formatting.
-            # Fenced code blocks (```python ... ```) and tables are common.
-            generated_tutorial_html = markdown.markdown(
-                generated_tutorial_md,
-                extensions=['fenced_code', 'tables', 'sane_lists', 'codehilite'] # Added codehilite
-            )
-            # NO LONGER NEED TO EXTRACT TOPIC HERE
-            # topic_match = re.search(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:\\s*(.*?)</h2>', generated_tutorial_html, re.IGNORECASE)
-            # if topic_match:
-            #     tutorial_topic_display = topic_match.group(1).strip()
-            # else:
-            #      logger.warning("Could not extract tutorial topic from converted HTML using regex.")
-            #      # Keep tutorial_topic_display as the passed-in value or default
+            # REMOVE OR COMMENT OUT THIS BLOCK STARTING HERE [cite: 161]
+            # generated_tutorial_html = markdown.markdown(
+            #     generated_tutorial_md,
+            #     extensions=['fenced_code', 'tables', 'sane_lists', 'codehilite'] # Added codehilite
+            # )
+            # REMOVE OR COMMENT OUT THIS BLOCK ENDING HERE
 
-            # Still remove the H2 from the converted HTML if it exists
-            generated_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', generated_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip()
+            # Assign the raw HTML directly (assuming the variable name is updated)
+            generated_tutorial_html = generated_tutorial_html # Or whatever the input variable is named
+
+            # This regex might still be needed if the generator adds an H2 you don't want,
+            # but it should operate on the raw HTML, not the result of a markdown conversion.
+            # Consider coordinating whether the generator or assembly adds the H2.
+            generated_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', generated_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip() [cite: 163]
 
         except Exception as e:
-            logger.error(f"Failed to convert generated tutorial Markdown to HTML: {e}")
-            generated_tutorial_html = "<p><em>Error converting tutorial content to HTML.</em></p>"
-            tutorial_topic_display = "Conversion Error" # Keep this error state
+            logger.error(f"Failed to process generated tutorial HTML: {e}") # Update error message
+            generated_tutorial_html = "<p><em>Error processing tutorial content.</em></p>"
+            tutorial_topic_display = "Processing Error" # Update error state [cite: 164]
 
 
     # --- Start HTML Document ---
@@ -87,90 +84,91 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
     html_parts.append(f"<title>AI Daily Digest - {date_str}</title>")
     # Updated CSS for better spacing, code blocks, etc.
     html_parts.append("""<style>
-        body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f9fa; color: #343a40; }
-        .container { width: 95%; max-width: 750px; margin: 20px auto; background-color: #ffffff; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .header { background-color: #007bff; color: #ffffff; padding: 25px 30px; text-align: center; border-bottom: 5px solid #0056b3; }
+        body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f9fa; color: #24292e; } /* Updated base color */
+        .container { width: 95%; max-width: 800px; margin: 20px auto; background-color: #ffffff; border: 1px solid #dfe2e5; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); } /* Adjusted border/shadow */
+        .header { background-color: #0366d6; color: #ffffff; padding: 25px 30px; text-align: center; border-bottom: 5px solid #005cc5; } /* GitHub blue */
         .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
         .header p { margin: 5px 0 0; font-size: 16px; font-style: italic; opacity: 0.9; }
-        .overview { background-color: #eaf2fa; padding: 15px 25px; margin: 25px; border-left: 4px solid #007bff; border-radius: 4px; }
-        .overview h3 { margin-top: 0; margin-bottom: 10px; color: #0056b3; font-size: 18px; }
+        .overview { background-color: #f6f8fa; padding: 15px 25px; margin: 25px; border-left: 4px solid #0366d6; border-radius: 4px; } /* Lighter blue */
+        .overview h3 { margin-top: 0; margin-bottom: 10px; color: #005cc5; font-size: 18px; }
         .overview ul { margin: 0; padding-left: 20px; }
         .overview li { margin-bottom: 5px; }
-        .section { padding: 20px 30px; border-bottom: 1px solid #eee; }
+        .section { padding: 20px 30px; border-bottom: 1px solid #eaecef; } /* Lighter border */
         .section:last-child { border-bottom: none; }
-        .section h2 { background-color: #f1f3f5; padding: 12px 20px; margin: -20px -30px 20px -30px; font-size: 20px; font-weight: 600; color: #495057; border-bottom: 1px solid #dee2e6; display: flex; align-items: center; }
+        .section h2 { background-color: #f6f8fa; padding: 12px 20px; margin: -20px -30px 20px -30px; font-size: 20px; font-weight: 600; color: #24292e; border-bottom: 1px solid #eaecef; display: flex; align-items: center; } /* Lighter header */
         .section h2 img.google-icon { margin-right: 8px; }
-        .item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px dashed #ced4da; }
+        .item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px dashed #d1d5da; } /* Slightly darker dashed border */
         .item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
-        .item h3 { margin-top: 0; margin-bottom: 5px; font-size: 18px; color: #0056b3; font-weight: 600; } /* Emoji removed from HTML directly */
-        .item p { margin-top: 5px; margin-bottom: 12px; font-size: 15px; color: #343a40; }
-        .item p strong { color: #212529; font-weight: 600; }
-        .item a { color: #007bff; text-decoration: none; }
+        .item h3 { margin-top: 0; margin-bottom: 5px; font-size: 18px; color: #0366d6; font-weight: 600; } /* GitHub blue link color */
+        .item p { margin-top: 5px; margin-bottom: 12px; font-size: 15px; color: #24292e; }
+        .item p strong { color: #24292e; font-weight: 600; }
+        .item a { color: #0366d6; text-decoration: none; }
         .item a:hover { text-decoration: underline; }
-        .source-link { font-size: 0.9em; color: #6c757d; margin-top: -8px !important; margin-bottom: 15px !important; word-break: break-all; }
-        .google-icon { width: 16px; height: 16px; vertical-align: middle; /* Adjusted alignment */ }
-        .actionable-ideas-list ul { list-style-type: none; padding-left: 0; }
-        .actionable-ideas-list li { background-color: #f8f9fa; margin-bottom: 10px; padding: 12px 15px; border-left: 3px solid #17a2b8; border-radius: 4px; }
-        .actionable-ideas-list li em { color: #5a6268; font-size: 0.9em; }
+        .source-link { font-size: 0.9em; color: #586069; margin-top: -8px !important; margin-bottom: 15px !important; word-break: break-all; } /* GitHub secondary text color */
+        .google-icon { width: 16px; height: 16px; vertical-align: middle; }
+        .actionable-ideas-list ul { list-style-type: disc; padding-left: 20px; margin-top: 10px;}
+        .actionable-ideas-list li { background-color: transparent; margin-bottom: 10px; padding: 0; border-left: none; border-radius: 0px; }
+        .actionable-ideas-list li em { color: #586069; font-size: 0.9em; display: block; margin-top: 4px;}
         .market-pulse-list ul { list-style-type: disc; padding-left: 20px; }
         .market-pulse-list li { margin-bottom: 8px; }
-        .market-pulse-list li em { color: #5a6268; font-size: 0.9em; }
-        .footer { text-align: center; padding: 20px; font-size: 12px; color: #6c757d; background-color: #f1f3f5; border-top: 1px solid #dee2e6; }
-        /* Styles for code blocks generated by markdown codehilite */
-        .codehilite { background: #f8f8f8; border: 1px solid #ccc; padding: 10px; border-radius: 4px; overflow-x: auto; font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace; font-size: 14px; }
-        .codehilite pre { margin: 0; background: transparent; border: none; padding: 0; } /* Reset pre styles within codehilite */
-        /* Syntax Highlighting Styles (VS Code Light Theme inspired) */
-        .codehilite .hll { background-color: #ffffcc } /* Highlighted line - adjust as needed */
-        .codehilite .c { color: #008000; } /* Comment */
-        .codehilite .c1 { color: #008000; } /* Comment.Single */
-        .codehilite .cs { color: #008000; font-style: italic; } /* Comment.Special */
-        .codehilite .k { color: #0000ff; } /* Keyword */
-        .codehilite .kc { color: #0000ff; } /* Keyword.Constant */
-        .codehilite .kd { color: #0000ff; } /* Keyword.Declaration */
-        .codehilite .kn { color: #0000ff; } /* Keyword.Namespace */
-        .codehilite .kp { color: #0000ff; } /* Keyword.Pseudo */
-        .codehilite .kr { color: #0000ff; } /* Keyword.Reserved */
-        .codehilite .kt { color: #2b91af; } /* Keyword.Type */
-        .codehilite .m { color: #098658; } /* Literal.Number */
-        .codehilite .mf { color: #098658; } /* Literal.Number.Float */
-        .codehilite .mh { color: #098658; } /* Literal.Number.Hex */
-        .codehilite .mi { color: #098658; } /* Literal.Number.Integer */
-        .codehilite .mo { color: #098658; } /* Literal.Number.Oct */
-        .codehilite .s { color: #a31515; } /* Literal.String */
-        .codehilite .sa { color: #a31515; } /* Literal.String.Affix */
-        .codehilite .sb { color: #a31515; } /* Literal.String.Backtick */
-        .codehilite .sc { color: #a31515; } /* Literal.String.Char */
-        .codehilite .dl { color: #a31515; } /* Literal.String.Delimiter */
-        .codehilite .sd { color: #a31515; font-style: italic; } /* Literal.String.Doc */
-        .codehilite .s2 { color: #a31515; } /* Literal.String.Double */
-        .codehilite .se { color: #a31515; } /* Literal.String.Escape */
-        .codehilite .sh { color: #a31515; } /* Literal.String.Heredoc */
-        .codehilite .si { color: #a31515; } /* Literal.String.Interpol */
-        .codehilite .sx { color: #a31515; } /* Literal.String.Other */
-        .codehilite .sr { color: #a31515; } /* Literal.String.Regex */
-        .codehilite .s1 { color: #a31515; } /* Literal.String.Single */
-        .codehilite .ss { color: #a31515; } /* Literal.String.Symbol */
-        .codehilite .na { color: #795e26; } /* Name.Attribute */
-        .codehilite .nb { color: #2b91af; } /* Name.Builtin */
-        .codehilite .nc { color: #2b91af; } /* Name.Class */
-        .codehilite .no { color: #0000a0; } /* Name.Constant */
-        .codehilite .nd { color: #800080; } /* Name.Decorator */
-        .codehilite .ni { color: #800000; } /* Name.Entity */
-        .codehilite .ne { color: #a00000; font-weight: bold; } /* Name.Exception */
-        .codehilite .nf { color: #795e26; } /* Name.Function */
-        .codehilite .nl { color: #a0a0a0; } /* Name.Label */
-        .codehilite .nn { color: #0000ff; } /* Name.Namespace */
-        .codehilite .nt { color: #800000; } /* Name.Tag */
-        .codehilite .nv { color: #0000a0; } /* Name.Variable */
-        .codehilite .ow { color: #0000ff; font-weight: bold; } /* Operator.Word */
+        .market-pulse-list li .source-title { color: #586069; font-size: 0.9em; display: block; margin-top: 2px;} /* C.7 */
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #586069; background-color: #f6f8fa; border-top: 1px solid #eaecef; }
+
+        /* Styles for code blocks - aiming for VS Code Light+ look (GitHub inspired) */
+        .codehilite { background: #f6f8fa; border: 1px solid #dfe2e5; padding: 12px 15px; border-radius: 6px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; }
+        .codehilite pre { margin: 0; padding: 0; background: transparent; border: none; font-family: inherit; font-size: inherit; white-space: pre; word-wrap: normal; } /* Ensure pre doesn't add extra styles */
+        /* Pygments Classes - Based on GitHub Light theme */
+        .codehilite .hll { background-color: #fffbdd; } /* Highlighted line */
+        .codehilite .c { color: #6a737d; font-style: italic; } /* Comment */
+        .codehilite .c1 { color: #6a737d; font-style: italic; } /* Comment.Single */
+        .codehilite .cs { color: #6a737d; font-style: italic; } /* Comment.Special */
+        .codehilite .k { color: #d73a49; } /* Keyword */
+        .codehilite .kc { color: #d73a49; } /* Keyword.Constant */
+        .codehilite .kd { color: #d73a49; } /* Keyword.Declaration */
+        .codehilite .kn { color: #d73a49; } /* Keyword.Namespace */
+        .codehilite .kp { color: #d73a49; } /* Keyword.Pseudo */
+        .codehilite .kr { color: #d73a49; } /* Keyword.Reserved */
+        .codehilite .kt { color: #d73a49; } /* Keyword.Type */
+        .codehilite .m { color: #005cc5; } /* Literal.Number */
+        .codehilite .mf { color: #005cc5; } /* Literal.Number.Float */
+        .codehilite .mh { color: #005cc5; } /* Literal.Number.Hex */
+        .codehilite .mi { color: #005cc5; } /* Literal.Number.Integer */
+        .codehilite .mo { color: #005cc5; } /* Literal.Number.Oct */
+        .codehilite .s { color: #032f62; } /* Literal.String */
+        .codehilite .sa { color: #032f62; } /* Literal.String.Affix */
+        .codehilite .sb { color: #032f62; } /* Literal.String.Backtick */
+        .codehilite .sc { color: #032f62; } /* Literal.String.Char */
+        .codehilite .dl { color: #032f62; } /* Literal.String.Delimiter */
+        .codehilite .sd { color: #032f62; font-style: italic; } /* Literal.String.Doc */
+        .codehilite .s2 { color: #032f62; } /* Literal.String.Double */
+        .codehilite .se { color: #005cc5; } /* Literal.String.Escape */
+        .codehilite .sh { color: #032f62; } /* Literal.String.Heredoc */
+        .codehilite .si { color: #032f62; } /* Literal.String.Interpol */
+        .codehilite .sx { color: #032f62; } /* Literal.String.Other */
+        .codehilite .sr { color: #032f62; } /* Literal.String.Regex */
+        .codehilite .s1 { color: #032f62; } /* Literal.String.Single */
+        .codehilite .ss { color: #032f62; } /* Literal.String.Symbol */
+        .codehilite .na { color: #005cc5; } /* Name.Attribute */
+        .codehilite .nb { color: #005cc5; } /* Name.Builtin */
+        .codehilite .nc { color: #6f42c1; } /* Name.Class */
+        .codehilite .no { color: #005cc5; } /* Name.Constant */
+        .codehilite .nd { color: #6f42c1; } /* Name.Decorator */
+        .codehilite .ni { color: #005cc5; } /* Name.Entity */
+        .codehilite .ne { color: #d73a49; font-weight: bold; } /* Name.Exception */
+        .codehilite .nf { color: #6f42c1; } /* Name.Function */
+        .codehilite .nl { color: #d73a49; } /* Name.Label */
+        .codehilite .nn { color: #6f42c1; } /* Name.Namespace */
+        .codehilite .nt { color: #22863a; } /* Name.Tag */
+        .codehilite .nv { color: #e36209; } /* Name.Variable */
+        .codehilite .ow { color: #d73a49; font-weight: bold; } /* Operator.Word */
         .codehilite .w { color: #bbbbbb; } /* Text.Whitespace */
-        .codehilite .bp { color: #2b91af; } /* Name.Builtin.Pseudo */
-        .codehilite .fm { color: #795e26; } /* Name.Function.Magic */
-        .codehilite .py { color: #000000; } /* Name */
-        .codehilite .vc { color: #0000a0; } /* Name.Variable.Class */
-        .codehilite .vg { color: #0000a0; } /* Name.Variable.Global */
-        .codehilite .vi { color: #0000a0; } /* Name.Variable.Instance */
-        .codehilite .vm { color: #0000a0; } /* Name.Variable.Magic */
+        .codehilite .bp { color: #005cc5; } /* Name.Builtin.Pseudo */
+        .codehilite .fm { color: #6f42c1; } /* Name.Function.Magic */
+        .codehilite .py { color: #24292e; } /* Name */
+        .codehilite .vc { color: #e36209; } /* Name.Variable.Class */
+        .codehilite .vg { color: #e36209; } /* Name.Variable.Global */
+        .codehilite .vi { color: #e36209; } /* Name.Variable.Instance */
+        .codehilite .vm { color: #6f42c1; } /* Name.Variable.Magic */
     </style>""")
     html_parts.append("</head>")
     html_parts.append("<body>")
@@ -252,12 +250,10 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
 
     # --- Skill Up Tutorial (Generated) ---
     html_parts.append("<div class=\"section\">")
-    # Use HTML H2 tag directly here, not from Markdown conversion
-    # Add id for TOC (C10)
-    html_parts.append(f'<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - {html.escape(tutorial_topic_display)}</h2>')
+    html_parts.append(f'<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - {html.escape(tutorial_topic_display)}</h2>') # This adds the H2
     if generated_tutorial_html:
-         # Insert the HTML converted from Markdown (with H2 already removed)
-         html_parts.append(generated_tutorial_html)
+        # Insert the (now correctly handled) HTML directly [cite: 260]
+        html_parts.append(generated_tutorial_html)
     else:
         html_parts.append("<p><em>Tutorial generation failed or no topic selected today.</em></p>")
     html_parts.append("</div>")

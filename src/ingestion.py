@@ -11,9 +11,11 @@ logger = logging.getLogger(__name__)
 _fetch_cache = {}
 _CACHE_EXPIRY_SECONDS = 60 * 5 # 5 minutes
 
-def _fetch_single_feed(feed_url):
-    """Fetches and parses a single RSS feed with basic error handling."""
+def _fetch_single_feed(feed_url, processed_urls):
+    """Fetches and parses a single RSS feed with basic error handling and deduplication check."""
     current_time = time.time()
+    now_dt = datetime.datetime.now()
+    seven_days_ago = now_dt - datetime.timedelta(days=7)
 
     # Check cache
     if feed_url in _fetch_cache:
@@ -56,10 +58,20 @@ def _fetch_single_feed(feed_url):
         for entry in feed_data.entries:
             # Prioritize published_parsed, then updated_parsed
             published_time = entry.get('published_parsed') or entry.get('updated_parsed')
+            item_url = entry.get('link', 'No Link')
+
+            # B.4: Check against processed URLs
+            if item_url != 'No Link' and item_url in processed_urls:
+                processed_timestamp = processed_urls[item_url]
+                # Ensure comparison happens between aware datetime objects if possible
+                # Assuming processed_urls stores datetime objects directly (loaded in main.py)
+                if processed_timestamp >= seven_days_ago:
+                    # logger.debug(f"[{feed_url}] Skipping duplicate item (seen within 7 days): {item_url}")
+                    continue # Skip this entry
 
             item = {
                 'title': entry.get('title', 'No Title'),
-                'link': entry.get('link', 'No Link'),
+                'link': item_url,
                  # Keep published as struct_time for now, handle conversion in filtering
                 'published': published_time,
                 'summary': entry.get('summary') or entry.get('description', 'No Summary'), # Some feeds use description
@@ -195,11 +207,11 @@ def _filter_items(items, feed_url, ingestion_config):
 
     return filtered_items
 
-# Modified function signature to accept config
-def fetch_all_feeds(feed_list, config, max_workers=5):
-    """Fetches all feeds, applies pre-filtering based on config, and returns unique items."""
+# Modified function signature to accept config and processed_urls
+def fetch_all_feeds(feed_list, config, processed_urls, max_workers=5):
+    """Fetches all feeds, applies pre-filtering, checks deduplication, and returns unique items."""
     all_items = []
-    processed_ids = set() # For basic deduplication across feeds
+    processed_ids = set() # For basic intra-run deduplication across feeds
     ingestion_config = config.get('ingestion', {}) # Get ingestion settings
     skip_feeds = ingestion_config.get('skip_feeds', [])
 
@@ -230,7 +242,8 @@ def fetch_all_feeds(feed_list, config, max_workers=5):
             logger.warning("No valid feed URLs remaining after checking skip_feeds.")
             return []
 
-        future_to_url = {executor.submit(_fetch_single_feed, url): url for url in valid_feed_urls}
+        # Pass processed_urls to the worker function (B.4)
+        future_to_url = {executor.submit(_fetch_single_feed, url, processed_urls): url for url in valid_feed_urls}
 
         items_processed_before_dedup = 0
         for future in as_completed(future_to_url):

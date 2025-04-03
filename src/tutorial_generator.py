@@ -37,41 +37,34 @@ def select_tutorial_topic():
 
 # --- Prompt Definition ---
 TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent("""
-    You are an expert AI educator creating a practical, concise tutorial for a highly technical CTO (Strong Python/AI background, high IQ, familiar with ML/LLMs, weak theory, time-poor) who wants to learn how to implement **{topic}**.
+    You are an expert AI educator creating a practical, concise tutorial for a highly technical CTO (Strong Python/AI background, high IQ, familiar with ML/LLMs, time-poor) who wants deep, actionable expertise, with a focus on Google AI and related ecosystem tools (like LangGraph, Label Studio, etc.) where relevant.
 
-    Generate a step-by-step tutorial focusing on practical application and core concepts. Assume the user has Python 3.9+ and necessary libraries (mention them clearly). Output should be well-formatted Markdown.
+    Generate a step-by-step tutorial in HTML format on the topic of **{topic}**.
 
-    Structure the tutorial using Markdown:
+    **Target Audience Fit:**
+    - Assume strong existing Python and general ML/AI knowledge.
+    - Focus on practical implementation, core concepts, and potential "gotchas" or optimization tips relevant to production/scaling. Avoid overly basic theory.
+    - Keep it concise and highly actionable (10-15 min read/implementation time).
 
-    ## 🛠️ Skill Up Tutorial: {topic}
+    **Content Requirements:**
+    - Directly address the core technology/concept of **{topic}**.
+    - Prioritize a single, clear objective (e.g., using a specific API, implementing a pattern, setting up a tool).
+    - Include runnable (or near-runnable) code snippets with brief, targeted explanations.
+    - If applicable, mention integration points with other relevant tools or Google Cloud services.
+    - Briefly touch upon key considerations for real-world use (e.g., API keys, error handling, performance).
 
-    **Objective:** (State clearly what the user will achieve by following this tutorial).
-    **Core Concepts:** (Briefly explain 1-3 essential ideas SPECIFIC to implementing this task. Keep it extremely concise and practical, avoid deep theory).
-    **Prerequisites:** (List specific Python libraries and their versions needed, e.g., `langgraph==0.0.30`, `google-generativeai`). Assume Python itself is installed.
-    **Step-by-Step Implementation:**
-        1.  **Setup:** Import necessary libraries.
-        2.  **[Step 2 Name]:** Minimal code for the first part.
-            ```python
-            # Code for step 2
-            ```
-            *Explanation:* Briefly explain the purpose of this code block.
-        3.  **[Step 3 Name]:** Next logical code block.
-            ```python
-            # Code for step 3
-            ```
-            *Explanation:* Briefly explain this code block.
-        ... (Continue with minimal, logical steps)
-        N.  **Running the Example:** Show how to run the complete minimal example.
-            ```python
-            # Example usage / main execution block
-            if __name__ == "__main__":
-                # ... setup and run the example ...
-                pass
-            ```
-    **Key Considerations:** (Mention 1-2 important practical points, e.g., "API Key Management", "Handling potential errors", "State management in loops").
-    **Next Steps / Further Learning:** (Provide 1-2 links to official documentation or a highly relevant advanced resource/article).
+    **CRITICAL FORMATTING INSTRUCTIONS:**
+    - The *entire* output MUST be valid HTML, suitable for embedding directly into an email body.
+    - **DO NOT wrap the entire HTML output in a `<pre>`, `<code>`, or Markdown triple backtick (\`\`\`) block.** The output should start directly with the `<h2>` tag.
+    - **ONLY Python code examples should be wrapped, using exactly this structure: `<pre><code class="language-python">...RAW_PYTHON_CODE_HERE...</code></pre>`.**
+    - The content *inside* the `<code>` tag must be ONLY the raw Python code text. Ensure necessary HTML escaping (e.g., for `<` or `>`) is applied *within* the code content itself if needed.
+    - **DO NOT use Markdown triple backticks (\`\`\`) anywhere in the output.**
+    - Use standard, clean HTML tags for text structure (e.g., `<h2>`, `<p>`, `<ul>`, `<li>`, `<strong>`).
+    - Start the tutorial *immediately* with the headline: `<h2>🛠️ Skill Up Tutorial: {topic}</h2>`
 
-    Make the tutorial highly pedagogical, actionable, and digestible within 10-15 minutes reading/implementation time. Prioritize clarity, runnable code, and practical explanations over exhaustive detail. Ensure code blocks are complete where possible or clearly indicate dependencies between steps.
+    **Topic:** {topic}
+
+    **Generate the HTML tutorial now:**
 """)
 
 # Modified signature to accept config

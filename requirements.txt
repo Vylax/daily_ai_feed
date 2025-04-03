@@ -7,4 +7,5 @@ markdown
 beautifulsoup4 # For potential future content extraction, good to have
 # Add sendgrid if preferred over smtplib
 # sendgrid
-lxml # Recommended parser for beautifulsoup4 
+lxml # Recommended parser for beautifulsoup4
+pymdown-extensions # For code highlighting 

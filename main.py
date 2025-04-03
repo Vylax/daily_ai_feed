@@ -78,7 +78,16 @@ def load_project_context(filepath=PROJECT_CONTEXT_FILE):
             return context
         else:
             logger.warning(f"Project context file not found at {filepath}. Proceeding without project context.")
-            return None
+            # Ensure project_context.md exists with placeholder if not found
+            try:
+                placeholder_content = "# Project Context (Please Edit)\n\nReplace this text with details about your current projects, goals, and tech stacks.\nThis context will help the AI tailor actionable ideas.\n\nExample:\n## Project Hermes: API for X\n- Goal: ...\n- Tech: ...\n- Stage: ..."
+                context_path.parent.mkdir(parents=True, exist_ok=True)
+                context_path.write_text(placeholder_content, encoding="utf-8")
+                logger.info(f"Created placeholder project context file at {filepath}")
+                return placeholder_content
+            except Exception as create_e:
+                 logger.error(f"Failed to create placeholder context file at {filepath}: {create_e}")
+                 return None
     except Exception as e:
         logger.error(f"Error reading project context file {filepath}: {e}", exc_info=True)
         return None
@@ -121,7 +130,11 @@ def save_processed_urls(processed_urls, items_in_digest, filepath=PROCESSED_URLS
     urls_to_save = {url: ts.isoformat() for url, ts in updated_processed_urls.items()}
 
     try:
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        # Fix: Only create directory if path has a directory component
+        dir_path = os.path.dirname(filepath)
+        if dir_path:
+            os.makedirs(dir_path, exist_ok=True)
+            
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(urls_to_save, f, indent=2)
         logger.info(f"Saved {len(urls_to_save)} processed URLs (removed {len(processed_urls) - len(updated_processed_urls)} old entries) to {filepath}")
@@ -129,24 +142,20 @@ def save_processed_urls(processed_urls, items_in_digest, filepath=PROCESSED_URLS
         logger.error(f"Error saving processed URLs to {filepath}: {e}")
 
 # --- Main Workflow Function ---
-def run_daily_digest_pipeline():
+def run_daily_digest_pipeline(config, args):
     """Executes the complete pipeline for generating and sending the digest."""
     start_time = time.time()
     logger.info("Starting daily digest pipeline run...")
 
-    # 1. Load Configuration
-    logger.info("Loading configuration...")
-    config = load_config()
-    if not config:
-        logger.error("Failed to load configuration. Aborting pipeline.")
-        return
+    # Get deduplication file path from config (B.4)
+    processed_urls_filepath = config.get('processed_urls_filepath', PROCESSED_URLS_FILE)
 
-    # Load Project Context (C7)
+    # Load Project Context (B.3)
     logger.info("Loading project context...")
     project_context = load_project_context()
 
-    # Load Processed URLs for Deduplication (C8)
-    processed_urls = load_processed_urls()
+    # Load Processed URLs for Deduplication (B.4)
+    processed_urls = load_processed_urls(processed_urls_filepath)
 
     # Reset token counters at the beginning of the run
     reset_token_counts()
@@ -161,25 +170,13 @@ def run_daily_digest_pipeline():
 
     # 3. Ingestion - Fetch RSS Feeds
     logger.info("Fetching RSS feeds...")
-    all_items = fetch_all_feeds(config.get('rss_feeds', []), config) # Pass config
-    logger.info(f"Ingestion complete. {len(all_items)} items found before deduplication.")
+    all_items = fetch_all_feeds(config.get('rss_feeds', []), config, processed_urls) # Pass processed_urls (B.4)
+    logger.info(f"Ingestion complete. {len(all_items)} items fetched (deduplication handled during fetch)." ) # Logging reflects change
 
-    # Deduplication (C8)
-    original_count = len(all_items)
-    seven_days_ago = datetime.datetime.now() - datetime.timedelta(days=7)
-    items_to_process = []
-    skipped_count = 0
-    for item in all_items:
-        url = item.get('url')
-        if url and url in processed_urls and processed_urls[url] >= seven_days_ago:
-            skipped_count += 1
-            # logger.debug(f"Skipping duplicate URL (within 7 days): {url}")
-        else:
-            items_to_process.append(item)
-    logger.info(f"Removed {skipped_count} duplicate items (seen within last 7 days). Processing {len(items_to_process)} items.")
+    items_to_process = all_items # No separate filtering needed here now
 
     if not items_to_process:
-        logger.warning("No new items after deduplication. Pipeline might produce an empty digest.")
+        logger.warning("No new items found after ingestion and deduplication. Pipeline might produce an empty digest.")
         # Optionally, skip the rest of the pipeline if no new items
         # return
 
@@ -201,7 +198,7 @@ def run_daily_digest_pipeline():
     news_data, feed_tutorials_data = summarize_and_analyze(
         filtered_items,
         config,
-        project_context=project_context, # Pass context here
+        project_context=project_context, # Pass context here (B.3)
         num_news=config.get('num_news_items_to_summarize', 7),
         num_tutorials=config.get('num_feed_tutorials_to_include', 5)
     )
@@ -249,21 +246,30 @@ def run_daily_digest_pipeline():
         logger.error(f"Error saving timestamped digest locally: {e}")
 
     # 8. Delivery - Send Email
-    logger.info("Sending digest via email...")
-    subject = f"{config.get('email_subject_prefix', '[AI Digest]')} {datetime.date.today()}"
-    if config.get('recipient_email') and config.get('sender_email'):
-        # Pass the generated HTML directly to send_email
-        success = send_email(subject, final_digest_html, config)
-        if success:
-            logger.info("Digest email sent successfully.")
-        else:
-            logger.error("Failed to send digest email.")
+    send_attempted = False
+    if config.get('email_config') and config['email_config'].get('enabled', False) and final_digest_html:
+        logger.info("Sending digest email...")
+        email_subject = f"AI Daily Digest - {datetime.datetime.now().strftime('%B %d, %Y')}"
+        email_sent = send_email(
+            subject=email_subject,
+            html_content=final_digest_html,
+            config=config.get('email_config')
+        )
+        send_attempted = True
     else:
-        logger.warning("Recipient or Sender email not configured. Skipping email delivery.")
+        logger.info("Email sending is disabled or digest is empty. Skipping email.")
+        email_sent = False # Explicitly set to false if not attempted
 
-    # Update Processed URLs AFTER successful run (C8)
-    items_included_in_digest = news_data + feed_tutorials_data # Combine all items that were analyzed
-    save_processed_urls(processed_urls, items_included_in_digest)
+    # 9. Update Processed URLs (B.4) - *After* successful send or if send was not attempted but digest was generated
+    if final_digest_html: # Only update if a digest was actually generated
+        items_actually_in_digest = news_data + feed_tutorials_data # Combine lists to get all items included
+        if email_sent or not send_attempted:
+            logger.info("Updating processed URLs file...")
+            save_processed_urls(processed_urls, items_actually_in_digest, processed_urls_filepath)
+        else:
+            logger.warning("Email sending failed. Not updating processed URLs file to allow reprocessing.")
+    else:
+        logger.info("No digest content generated. Skipping update of processed URLs file.")
 
     # --- Pipeline End & Reporting ---
     end_time = time.time()
@@ -288,39 +294,55 @@ def run_daily_digest_pipeline():
 
 # --- Resend Function (C9) ---
 def resend_last_digest(config):
-    """Reads the last saved digest and resends it."""
-    logger.info(f"Attempting to resend the last digest from {LAST_DIGEST_FILE}...")
+    """Resends the last locally saved digest."""
+    logger.info("Attempting to resend the last digest...")
+    last_digest_path = Path(LAST_DIGEST_FILE)
+
+    if not config.get('email_config') or not config['email_config'].get('enabled', False):
+        logger.error("Email sending is not enabled in the configuration. Cannot resend.")
+        return
+
+    if not last_digest_path.is_file():
+        logger.error(f"Last digest file not found at {last_digest_path}. Cannot resend.")
+        return
+
     try:
-        if not os.path.exists(LAST_DIGEST_FILE):
-            logger.error(f"Last digest file not found at {LAST_DIGEST_FILE}. Cannot resend.")
-            return
-
-        with open(LAST_DIGEST_FILE, 'r', encoding='utf-8') as f:
-            last_digest_html = f.read()
-
+        last_digest_html = last_digest_path.read_text(encoding="utf-8")
         if not last_digest_html:
-            logger.error(f"Last digest file {LAST_DIGEST_FILE} is empty. Cannot resend.")
-            return
+             logger.error(f"Last digest file {last_digest_path} is empty. Cannot resend.")
+             return
 
-        # Use subject prefix from config, add Resend indicator
-        subject = f"[RESEND] {config.get('email_subject_prefix', '[AI Digest]')} {datetime.date.today()}"
+        # Create a subject that indicates it's a resend
+        email_subject = f"[Resend] AI Daily Digest - {datetime.datetime.now().strftime('%B %d, %Y')}"
+        logger.info(f"Resending digest from {last_digest_path}...")
 
-        if config.get('recipient_email') and config.get('sender_email'):
-            success = send_email(subject, last_digest_html, config)
-            if success:
-                logger.info("Last digest email resent successfully.")
-            else:
-                logger.error("Failed to resend last digest email.")
+        email_sent = send_email(
+            subject=email_subject,
+            html_content=last_digest_html,
+            config=config.get('email_config')
+        )
+
+        if email_sent:
+            logger.info("Last digest resent successfully.")
         else:
-            logger.warning("Recipient or Sender email not configured. Cannot resend email.")
+            logger.error("Failed to resend the last digest.")
 
     except Exception as e:
-        logger.error(f"Error during resend operation: {e}", exc_info=True)
+        logger.error(f"Error during resend process: {e}", exc_info=True)
 
 # --- Scheduling & Argument Parsing ---
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="AI Digest Agent")
-    parser.add_argument("--resend", action="store_true", help="Resend the last generated digest instead of running the pipeline.")
+    parser = argparse.ArgumentParser(description="Run the AI Daily Digest pipeline.")
+    parser.add_argument(
+        "--resend",
+        action="store_true",
+        help="Resend the last successfully generated digest."
+    )
+    parser.add_argument(
+        "--run-once",
+        action="store_true",
+        help="Run the pipeline once immediately instead of scheduling."
+    )
     args = parser.parse_args()
 
     logger.info("AI Digest Agent starting up.")
@@ -342,14 +364,14 @@ if __name__ == "__main__":
 
     if run_mode == 'once':
         logger.info("Running pipeline execution once...")
-        run_daily_digest_pipeline()
+        run_daily_digest_pipeline(config, args)
         logger.info("Single run complete. Exiting.")
     elif run_mode == 'schedule':
         # Run once immediately if configured (e.g., initial_run = true in config)
         if config.get('schedule_initial_run', True):
             logger.info("Running initial pipeline execution before scheduling...")
             try:
-                run_daily_digest_pipeline()
+                run_daily_digest_pipeline(config, args)
             except Exception as e:
                 logger.error(f"Initial pipeline run failed: {e}", exc_info=True)
             logger.info("Initial run complete.")
@@ -357,7 +379,7 @@ if __name__ == "__main__":
         # Schedule the job
         schedule_time = config.get('schedule_time', "06:00")
         logger.info(f"Scheduling daily run at {schedule_time}")
-        schedule.every().day.at(schedule_time).do(run_daily_digest_pipeline)
+        schedule.every().day.at(schedule_time).do(run_daily_digest_pipeline, config=config, args=args)
 
         # Keep the script running to allow the scheduler to work
         logger.info("Scheduler started. Waiting for scheduled jobs... (Press Ctrl+C to stop)")
