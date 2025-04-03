@@ -1,0 +1,18 @@
+2025-04-03 17:42:10,994 - INFO - __main__ - AI Digest Agent starting up.
+2025-04-03 17:42:10,996 - WARNING - src.config_loader - Unsupported email provider: 'smtp" # or "sendgrid'. Defaulting to 'smtp'.
+2025-04-03 17:42:10,996 - INFO - src.config_loader - Using Brevo SMTP fallback configuration after invalid provider
+2025-04-03 17:42:10,997 - INFO - __main__ - Attempting to resend the last digest from outputs/last_digest.html...
+2025-04-03 17:42:10,997 - INFO - src.email_utils - Attempting to send email via smtp...
+2025-04-03 17:42:10,999 - INFO - src.email_utils - SMTP ATTEMPT: Connecting to smtp-relay.brevo.com:587
+2025-04-03 17:42:11,020 - INFO - src.email_utils - SSL Context created for SMTP connection
+2025-04-03 17:42:11,020 - INFO - src.email_utils - Using STARTTLS (explicit) for connection
+2025-04-03 17:42:11,021 - INFO - src.email_utils - Creating SMTP connection to smtp-relay.brevo.com:587
+2025-04-03 17:42:11,052 - INFO - src.email_utils - SMTP connection established, attempting STARTTLS
+2025-04-03 17:42:11,078 - INFO - src.email_utils - STARTTLS completed successfully
+2025-04-03 17:42:11,078 - INFO - src.email_utils - Attempting login with username: 8980b5002@smtp-brevo.com (server's preferred method)
+2025-04-03 17:42:11,154 - INFO - src.email_utils - Login successful for 8980b5002@smtp-brevo.com
+2025-04-03 17:42:11,155 - INFO - src.email_utils - Sending email from '8980b5002@smtp-brevo.com' to 'jrdn.allemand@gmail.com'
+2025-04-03 17:42:11,232 - INFO - src.email_utils - Email sent successfully to jrdn.allemand@gmail.com
+2025-04-03 17:42:11,240 - INFO - src.email_utils - SMTP connection closed
+2025-04-03 17:42:11,241 - INFO - __main__ - Last digest email resent successfully.
+2025-04-03 17:42:11,241 - INFO - __main__ - Resend operation complete. Exiting.

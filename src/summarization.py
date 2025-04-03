@@ -35,18 +35,30 @@ ANALYSIS_PROMPT_TEMPLATE = dedent("""
     Content Snippet: {content_snippet}
     Basic Summary: {basic_summary}
 
+    --- User's Project Context --- START
+    {project_context}
+    --- User's Project Context --- END
+
     Provide the following analysis points. Output ONLY the text content for each point, prefixed with the specific label EXACTLY as shown below:
-    💡 Key Technical Insight: [Text content]
-    📊 The Competitive Angle: [Text content]
-    🚀 Your Potential Move: [Text content]
+    💡 Key Technical Insight: [Text content derived *only* from the item itself]
+    📊 The Competitive Angle: [Text content derived *only* from the item itself]
+    🚀 Your Potential Move: Analyze this item *in the context of the user's current projects* (provided above). If there's a *clear, high-ROI*, and *sensible* application or improvement related to these projects, suggest a *concrete* next step, experiment, or strategic question. Focus on practical relevance. If no specific, valuable project connection exists, output 'No specific project application identified for this item.'
 
     Ensure each point starts on a new line. Do NOT include any HTML tags, markdown formatting, or extra explanations.
 """)
 
 def _extract_analysis_field(text, label):
     """Extracts text following a specific label on a new line."""
-    # Match label at the start of a line, capture everything after it until the next label or end of string
-    pattern = re.compile(rf"^{re.escape(label)}\s*(.*?)(?=\n(?:💡|��|🚀)|\\Z)", re.MULTILINE | re.DOTALL)
+    # Refined Regex:
+    # - ^ asserts position at the start of a line (due to re.MULTILINE).
+    # - re.escape(label) matches the literal label string.
+    # - \\s* matches optional whitespace after the label.
+    # - (.*?) non-greedily captures the content.
+    # - (?=...) is a positive lookahead, ensuring the capture stops when it sees:
+    #   - \\n(?:💡|📊|🚀) - a newline followed by one of the known labels OR
+    #   - \\Z - the end of the string.
+    # This prevents reading past the intended section.
+    pattern = re.compile(rf"^{re.escape(label)}\\s*(.*?)(?=\\n(?:💡|📊|🚀)|\\Z)", re.MULTILINE | re.DOTALL)
     match = pattern.search(text)
     if match:
         # Clean up the captured text: strip whitespace, remove potential code blocks/extra notes
@@ -69,7 +81,7 @@ def _extract_analysis_field(text, label):
         return html.unescape(content).strip() # Unescape HTML entities like &amp;
     return None
 
-def _process_single_item(item, config):
+def _process_single_item(item, config, project_context):
     """Generates summary & analysis for a single item, returning structured data."""
     gemini_config = config.get('gemini_models', {})
     # Use 2.0 models as defaults, matching user preference and config
@@ -116,7 +128,8 @@ def _process_single_item(item, config):
         title=item_title,
         url=item_url,
         content_snippet=content_snippet,
-        basic_summary=basic_summary or "[Summary generation failed]" # Pass placeholder if summary failed
+        basic_summary=basic_summary or "[Summary generation failed]",
+        project_context=project_context or "No project context provided."
     )
     analysis_response = _make_gemini_call_with_tracking(
         model_name=analysis_model_name,
@@ -154,14 +167,14 @@ def _process_single_item(item, config):
 
     return result_data # Return dictionary
 
-# Modified signature to accept config
-# Updated return type
-def summarize_and_analyze(items, config, num_news, num_tutorials, max_workers=3):
+# Modified signature to accept project_context (C7)
+def summarize_and_analyze(items, config, project_context, num_news, num_tutorials, max_workers=3):
     """Selects top items, generates summaries/analyses (as structured data), and separates them.
 
     Args:
         items: List of FILTERED and TAGGED item dictionaries from processing.
         config: The loaded configuration dictionary.
+        project_context: String containing the user's project context, or None.
         num_news: Max number of general news/research items to summarize.
         num_tutorials: Max number of tutorial items to summarize.
         max_workers: Max concurrent API calls for summarization.
@@ -197,9 +210,9 @@ def summarize_and_analyze(items, config, num_news, num_tutorials, max_workers=3)
 
     processed_results = {} # Store results keyed by URL: {dict_from__process_single_item}
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        # Pass config to the worker function
+        # Pass config and project_context to the worker function (C7)
         future_to_url = {
-            executor.submit(_process_single_item, item, config): item.get('url')
+            executor.submit(_process_single_item, item, config, project_context): item.get('url')
             for item in items_to_process
         }
 
@@ -276,8 +289,12 @@ if __name__ == '__main__':
     # Reset token counts for the test run
     reset_token_counts()
 
-    # Dummy filtered items (output similar to processing.py)
-    test_filtered_items = [
+    # Load dummy project context for testing
+    dummy_context = "Current projects:\n- LangGraph agent for automated code review.\n- RAG pipeline for internal documentation search.\n- Exploring multi-modal models for UI analysis."
+
+    # Example filtered items (replace with more realistic data if needed)
+    dummy_items = [
+        {'url': 'http://example.com/news1', 'title': 'New LLM Achieves State-of-the-Art Performance', 'content_type': 'News', 'relevance_score': 95, 'justification': 'Groundbreaking results reported.'},
         {"url": "http://google.com/gemini", "title": "Google Announces New Gemini Features", "source": "google_blog", "relevance_score": 9, "justification": "Direct update on Gemini models. Includes details on new vision capabilities.", "content_type": "Company Update", "keywords": ["gemini", "google ai", "llm update"]},
         {"url": "http://langchain.dev/langgraph", "title": "Intro to LangGraph for Agentic Workflows", "source": "langchain_blog", "relevance_score": 8, "justification": "Relevant tech (LangGraph) for building agents. Shows graph structure.", "content_type": "Tutorial/Guide", "keywords": ["langgraph", "langchain", "agents", "python"]},
         {"url": "http://deepmind.com/af3", "title": "DeepMind Paper on AlphaFold 3", "source": "deepmind_blog", "relevance_score": 7, "justification": "Significant Google research, less immediately applicable to startup.", "content_type": "Research Paper Abstract", "keywords": ["deepmind", "alphafold", "proteins", "research"]},
@@ -293,8 +310,9 @@ if __name__ == '__main__':
     # Pass config to the function
     # Returns list of dicts now
     news_data, tutorial_data = summarize_and_analyze(
-        test_filtered_items,
+        dummy_items,
         config, # Pass config
+        dummy_context, # Pass project_context
         num_news=num_news_config,
         num_tutorials=num_tutorials_config
     )
