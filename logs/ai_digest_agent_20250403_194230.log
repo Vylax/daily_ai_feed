@@ -1,0 +1,248 @@
+2025-04-03 19:42:30,841 - INFO - __main__ - AI Digest Agent starting up.
+2025-04-03 19:42:30,843 - INFO - __main__ - Running initial pipeline execution before scheduling...
+2025-04-03 19:42:30,843 - INFO - __main__ - Starting daily digest pipeline run...
+2025-04-03 19:42:30,843 - INFO - __main__ - Loading project context...
+2025-04-03 19:42:30,844 - INFO - __main__ - Successfully loaded project context from project_context.md
+2025-04-03 19:42:30,844 - INFO - __main__ - Loaded 10 processed URLs from processed_urls.json
+2025-04-03 19:42:30,845 - INFO - src.processing - Token counts reset.
+2025-04-03 19:42:30,854 - INFO - __main__ - Configuring Gemini API...
+2025-04-03 19:42:30,855 - INFO - src.processing - Gemini configured using API Key.
+2025-04-03 19:42:30,855 - INFO - __main__ - Fetching RSS feeds...
+2025-04-03 19:42:30,855 - INFO - src.ingestion - Starting feed ingestion. Max hours: None, Keywords: None, Default Limit: None
+2025-04-03 19:42:30,856 - INFO - src.ingestion - Fetching feed: https://deepmind.google/blog/feed/basic/
+2025-04-03 19:42:30,856 - INFO - src.ingestion - Fetching feed: https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A
+2025-04-03 19:42:30,857 - INFO - src.ingestion - Fetching feed: https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA
+2025-04-03 19:42:30,868 - INFO - src.ingestion - Fetching feed: https://openai.com/news/rss.xml
+2025-04-03 19:42:30,888 - INFO - src.ingestion - Fetching feed: https://research.google/blog/rss/
+2025-04-03 19:42:30,942 - WARNING - src.ingestion - Feed at https://openai.com/news/rss.xml may be malformed: <unknown>:4:17: not well-formed (invalid token)
+2025-04-03 19:42:30,942 - ERROR - src.ingestion - Failed to fetch feed https://openai.com/news/rss.xml. Status code: 403
+2025-04-03 19:42:30,943 - INFO - src.ingestion - Fetching feed: https://research.facebook.com/feed/
+2025-04-03 19:42:30,943 - WARNING - src.ingestion - Fetching failed for URL (result was None): https://openai.com/news/rss.xml
+2025-04-03 19:42:30,964 - INFO - src.ingestion - Successfully fetched and parsed 15 items from https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A
+2025-04-03 19:42:30,964 - INFO - src.ingestion - Fetching feed: https://huggingface.co/blog/feed.xml
+2025-04-03 19:42:30,965 - INFO - src.ingestion - [https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A] Date filter: Skipped 14 items older than 48 hours.
+2025-04-03 19:42:30,966 - INFO - src.ingestion - [https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A] Filtered down from 15 to 1 items.
+2025-04-03 19:42:30,986 - INFO - src.ingestion - Successfully fetched and parsed 15 items from https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA
+2025-04-03 19:42:30,986 - INFO - src.ingestion - Fetching feed: https://www.technologyreview.com/topic/artificial-intelligence/feed/
+2025-04-03 19:42:30,987 - INFO - src.ingestion - [https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA] Date filter: Skipped 15 items older than 48 hours.
+2025-04-03 19:42:30,987 - INFO - src.ingestion - [https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA] Filtered down from 15 to 0 items.
+2025-04-03 19:42:30,996 - INFO - src.ingestion - All 15 fetched items from https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA were filtered out.
+2025-04-03 19:42:31,036 - INFO - src.ingestion - Successfully fetched and parsed 10 items from https://www.technologyreview.com/topic/artificial-intelligence/feed/
+2025-04-03 19:42:31,036 - INFO - src.ingestion - Fetching feed: https://www.technologyreview.com/feed/
+2025-04-03 19:42:31,036 - INFO - src.ingestion - [https://www.technologyreview.com/topic/artificial-intelligence/feed/] Date filter: Skipped 10 items older than 48 hours.
+2025-04-03 19:42:31,037 - INFO - src.ingestion - [https://www.technologyreview.com/topic/artificial-intelligence/feed/] Filtered down from 10 to 0 items.
+2025-04-03 19:42:31,045 - INFO - src.ingestion - All 10 fetched items from https://www.technologyreview.com/topic/artificial-intelligence/feed/ were filtered out.
+2025-04-03 19:42:31,089 - INFO - src.ingestion - Successfully fetched and parsed 10 items from https://www.technologyreview.com/feed/
+2025-04-03 19:42:31,090 - INFO - src.ingestion - Fetching feed: https://distill.pub/rss.xml
+2025-04-03 19:42:31,090 - INFO - src.ingestion - [https://www.technologyreview.com/feed/] Date filter: Skipped 4 items older than 48 hours.
+2025-04-03 19:42:31,126 - INFO - src.ingestion - [https://www.technologyreview.com/feed/] Filtered down from 10 to 6 items.
+2025-04-03 19:42:31,134 - ERROR - src.ingestion - Failed to fetch feed https://deepmind.google/blog/feed/basic/. Status code: 302
+2025-04-03 19:42:31,137 - INFO - src.ingestion - Fetching feed: https://techcrunch.com/category/artificial-intelligence/feed/
+2025-04-03 19:42:31,137 - WARNING - src.ingestion - Fetching failed for URL (result was None): https://deepmind.google/blog/feed/basic/
+2025-04-03 19:42:31,227 - INFO - src.ingestion - Successfully fetched and parsed 552 items from https://huggingface.co/blog/feed.xml
+2025-04-03 19:42:31,228 - INFO - src.ingestion - Fetching feed: https://venturebeat.com/category/ai/feed/
+2025-04-03 19:42:31,229 - INFO - src.ingestion - [https://huggingface.co/blog/feed.xml] Date filter: Skipped 552 items older than 48 hours.
+2025-04-03 19:42:31,238 - INFO - src.ingestion - [https://huggingface.co/blog/feed.xml] Filtered down from 552 to 0 items.
+2025-04-03 19:42:31,239 - INFO - src.ingestion - All 552 fetched items from https://huggingface.co/blog/feed.xml were filtered out.
+2025-04-03 19:42:31,250 - INFO - src.ingestion - Successfully fetched and parsed 52 items from https://distill.pub/rss.xml
+2025-04-03 19:42:31,280 - INFO - src.ingestion - Successfully fetched and parsed 99 items from https://research.google/blog/rss/
+2025-04-03 19:42:31,281 - INFO - src.ingestion - Fetching feed: https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+2025-04-03 19:42:31,281 - INFO - src.ingestion - [https://distill.pub/rss.xml] Date filter: Skipped 52 items older than 48 hours.
+2025-04-03 19:42:31,282 - INFO - src.ingestion - Fetching feed: https://syncedreview.com/feed
+2025-04-03 19:42:31,292 - INFO - src.ingestion - [https://distill.pub/rss.xml] Filtered down from 52 to 0 items.
+2025-04-03 19:42:31,304 - INFO - src.ingestion - All 52 fetched items from https://distill.pub/rss.xml were filtered out.
+2025-04-03 19:42:31,304 - INFO - src.ingestion - [https://research.google/blog/rss/] Date filter: Skipped 99 items older than 48 hours.
+2025-04-03 19:42:31,305 - INFO - src.ingestion - [https://research.google/blog/rss/] Filtered down from 99 to 0 items.
+2025-04-03 19:42:31,313 - INFO - src.ingestion - All 99 fetched items from https://research.google/blog/rss/ were filtered out.
+2025-04-03 19:42:31,343 - INFO - src.ingestion - Successfully fetched and parsed 28 items from https://venturebeat.com/category/ai/feed/
+2025-04-03 19:42:31,362 - INFO - src.ingestion - Successfully fetched and parsed 18 items from https://techcrunch.com/category/artificial-intelligence/feed/
+2025-04-03 19:42:31,398 - INFO - src.ingestion - Successfully fetched and parsed 10 items from https://www.theverge.com/rss/ai-artificial-intelligence/index.xml
+2025-04-03 19:42:31,398 - INFO - src.ingestion - Fetching feed: https://www.artificial-intelligence.blog/ai-news?format=rss
+2025-04-03 19:42:31,399 - INFO - src.ingestion - [https://venturebeat.com/category/ai/feed/] Date filter: Skipped 21 items older than 48 hours.
+2025-04-03 19:42:31,399 - INFO - src.ingestion - Fetching feed: https://blog.langchain.dev/rss/
+2025-04-03 19:42:31,400 - INFO - src.ingestion - Fetching feed: https://wandb.ai/site/rss.xml
+2025-04-03 19:42:31,400 - INFO - src.ingestion - [https://venturebeat.com/category/ai/feed/] Filtered down from 28 to 7 items.
+2025-04-03 19:42:31,430 - INFO - src.ingestion - [https://techcrunch.com/category/artificial-intelligence/feed/] Date filter: Skipped 7 items older than 48 hours.
+2025-04-03 19:42:31,439 - INFO - src.ingestion - [https://techcrunch.com/category/artificial-intelligence/feed/] Filtered down from 18 to 11 items.
+2025-04-03 19:42:31,439 - INFO - src.ingestion - [https://www.theverge.com/rss/ai-artificial-intelligence/index.xml] Date filter: Skipped 2 items older than 48 hours.
+2025-04-03 19:42:31,440 - INFO - src.ingestion - [https://www.theverge.com/rss/ai-artificial-intelligence/index.xml] Filtered down from 10 to 8 items.
+2025-04-03 19:42:31,478 - ERROR - src.ingestion - Failed to fetch feed https://syncedreview.com/feed. Status code: 301
+2025-04-03 19:42:31,479 - INFO - src.ingestion - Fetching feed: https://towardsdatascience.com/feed/
+2025-04-03 19:42:31,479 - WARNING - src.ingestion - Fetching failed for URL (result was None): https://syncedreview.com/feed
+2025-04-03 19:42:31,494 - WARNING - src.ingestion - Feed at https://research.facebook.com/feed/ may be malformed: text/html; charset="utf-8" is not an XML media type
+2025-04-03 19:42:31,495 - ERROR - src.ingestion - Failed to fetch feed https://research.facebook.com/feed/. Status code: 400
+2025-04-03 19:42:31,495 - INFO - src.ingestion - Fetching feed: https://www.analyticsvidhya.com/feed/
+2025-04-03 19:42:31,495 - WARNING - src.ingestion - Fetching failed for URL (result was None): https://research.facebook.com/feed/
+2025-04-03 19:42:31,550 - INFO - src.ingestion - Successfully fetched and parsed 15 items from https://blog.langchain.dev/rss/
+2025-04-03 19:42:31,551 - INFO - src.ingestion - Fetching feed: https://www.kdnuggets.com/feed/
+2025-04-03 19:42:31,551 - INFO - src.ingestion - [https://blog.langchain.dev/rss/] Date filter: Skipped 15 items older than 48 hours.
+2025-04-03 19:42:31,561 - INFO - src.ingestion - [https://blog.langchain.dev/rss/] Filtered down from 15 to 0 items.
+2025-04-03 19:42:31,562 - INFO - src.ingestion - All 15 fetched items from https://blog.langchain.dev/rss/ were filtered out.
+2025-04-03 19:42:31,828 - INFO - src.ingestion - Successfully fetched and parsed 9 items from https://towardsdatascience.com/feed/
+2025-04-03 19:42:31,829 - INFO - src.ingestion - Fetching feed: https://machinelearningmastery.com/feed/
+2025-04-03 19:42:31,829 - INFO - src.ingestion - [https://towardsdatascience.com/feed/] Date filter: Skipped 2 items older than 48 hours.
+2025-04-03 19:42:31,832 - INFO - src.ingestion - Successfully fetched and parsed 10 items from https://www.kdnuggets.com/feed/
+2025-04-03 19:42:31,833 - INFO - src.ingestion - [https://towardsdatascience.com/feed/] Filtered down from 9 to 7 items.
+2025-04-03 19:42:31,842 - INFO - src.ingestion - Fetching feed: https://realpython.com/atom.xml
+2025-04-03 19:42:31,842 - INFO - src.ingestion - [https://www.kdnuggets.com/feed/] Date filter: Skipped 5 items older than 48 hours.
+2025-04-03 19:42:31,843 - INFO - src.ingestion - [https://www.kdnuggets.com/feed/] Filtered down from 10 to 5 items.
+2025-04-03 19:42:31,891 - INFO - src.ingestion - Successfully fetched and parsed 10 items from https://machinelearningmastery.com/feed/
+2025-04-03 19:42:31,892 - INFO - src.ingestion - Fetching feed: https://www.artificial-intelligence.blog/terminology?format=rss
+2025-04-03 19:42:31,892 - INFO - src.ingestion - [https://machinelearningmastery.com/feed/] Date filter: Skipped 8 items older than 48 hours.
+2025-04-03 19:42:31,904 - INFO - src.ingestion - [https://machinelearningmastery.com/feed/] Filtered down from 10 to 2 items.
+2025-04-03 19:42:31,990 - INFO - src.ingestion - Successfully fetched and parsed 40 items from https://realpython.com/atom.xml
+2025-04-03 19:42:31,990 - INFO - src.ingestion - [https://realpython.com/atom.xml] Date filter: Skipped 39 items older than 48 hours.
+2025-04-03 19:42:31,991 - INFO - src.ingestion - [https://realpython.com/atom.xml] Filtered down from 40 to 1 items.
+2025-04-03 19:42:32,111 - INFO - src.ingestion - Successfully fetched and parsed 20 items from https://www.artificial-intelligence.blog/ai-news?format=rss
+2025-04-03 19:42:32,112 - INFO - src.ingestion - [https://www.artificial-intelligence.blog/ai-news?format=rss] Date filter: Skipped 20 items older than 48 hours.
+2025-04-03 19:42:32,113 - INFO - src.ingestion - [https://www.artificial-intelligence.blog/ai-news?format=rss] Filtered down from 20 to 0 items.
+2025-04-03 19:42:32,113 - INFO - src.ingestion - All 20 fetched items from https://www.artificial-intelligence.blog/ai-news?format=rss were filtered out.
+2025-04-03 19:42:32,671 - INFO - src.ingestion - Successfully fetched and parsed 9 items from https://www.analyticsvidhya.com/feed/
+2025-04-03 19:42:32,672 - INFO - src.ingestion - [https://www.analyticsvidhya.com/feed/] Date filter: Skipped 2 items older than 48 hours.
+2025-04-03 19:42:32,672 - INFO - src.ingestion - [https://www.analyticsvidhya.com/feed/] Filtered down from 9 to 7 items.
+2025-04-03 19:42:32,767 - INFO - src.ingestion - Successfully fetched and parsed 98 items from https://www.artificial-intelligence.blog/terminology?format=rss
+2025-04-03 19:42:32,768 - INFO - src.ingestion - [https://www.artificial-intelligence.blog/terminology?format=rss] Date filter: Skipped 98 items older than 48 hours.
+2025-04-03 19:42:32,769 - INFO - src.ingestion - [https://www.artificial-intelligence.blog/terminology?format=rss] Filtered down from 98 to 0 items.
+2025-04-03 19:42:32,769 - INFO - src.ingestion - All 98 fetched items from https://www.artificial-intelligence.blog/terminology?format=rss were filtered out.
+2025-04-03 19:42:33,775 - WARNING - src.ingestion - Feed at https://wandb.ai/site/rss.xml may be malformed: <unknown>:2:0: syntax error
+2025-04-03 19:42:33,775 - ERROR - src.ingestion - Failed to fetch feed https://wandb.ai/site/rss.xml. Status code: 404
+2025-04-03 19:42:33,776 - WARNING - src.ingestion - Fetching failed for URL (result was None): https://wandb.ai/site/rss.xml
+2025-04-03 19:42:33,777 - INFO - src.ingestion - Total items collected after filtering & pre-deduplication: 55
+2025-04-03 19:42:33,778 - INFO - src.ingestion - Total unique items added to digest after final deduplication: 55
+2025-04-03 19:42:33,778 - INFO - __main__ - Ingestion complete. 55 items fetched (deduplication handled during fetch).
+2025-04-03 19:42:33,779 - INFO - __main__ - Filtering and tagging items...
+2025-04-03 19:42:33,779 - INFO - src.processing - Sending 55 items to Gemini model 'gemini-2.0-flash-lite' for filtering/tagging...
+2025-04-03 19:42:33,780 - INFO - src.processing - Initializing Gemini model: gemini-2.0-flash-lite
+2025-04-03 19:42:33,780 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Filtering and Tagging...
+2025-04-03 19:42:51,753 - INFO - src.processing - Gemini call for Filtering and Tagging completed in 17.97 seconds.
+2025-04-03 19:42:51,754 - INFO - src.processing - Token Usage for Filtering and Tagging (gemini-2.0-flash-lite): Prompt=9026, Candidates=3460, Total=12486
+2025-04-03 19:42:51,755 - INFO - src.processing - Cumulative Tokens: 12486
+2025-04-03 19:42:51,757 - INFO - src.processing - Successfully received and parsed 20 filtered items from Gemini (gemini-2.0-flash-lite).
+2025-04-03 19:42:51,758 - INFO - __main__ - Processing complete. 20 items selected for summarization/analysis.
+2025-04-03 19:42:51,758 - INFO - __main__ - Summarizing and analyzing top items...
+2025-04-03 19:42:51,759 - INFO - src.summarization - Summarizing/analyzing top 7 news/other items and 5 tutorial items (generating structured data)...
+2025-04-03 19:42:51,760 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (What you need to know about Am...)...
+2025-04-03 19:42:51,761 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Zencoder’s ‘Coffee Mode’ is th...)...
+2025-04-03 19:42:51,762 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Augment Code debuts AI agent w...)...
+2025-04-03 19:42:52,794 - INFO - src.processing - Gemini call for Basic Summary (Augment Code debuts AI agent w...) completed in 1.03 seconds.
+2025-04-03 19:42:52,794 - INFO - src.processing - Token Usage for Basic Summary (Augment Code debuts AI agent w...) (gemini-2.0-flash-lite): Prompt=168, Candidates=80, Total=248
+2025-04-03 19:42:52,795 - INFO - src.processing - Cumulative Tokens: 12734
+2025-04-03 19:42:52,796 - INFO - src.processing - Initializing Gemini model: gemini-2.0-flash
+2025-04-03 19:42:52,796 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Augment Code debuts AI agent w...)...
+2025-04-03 19:42:52,802 - INFO - src.processing - Gemini call for Basic Summary (Zencoder’s ‘Coffee Mode’ is th...) completed in 1.04 seconds.
+2025-04-03 19:42:52,803 - INFO - src.processing - Token Usage for Basic Summary (Zencoder’s ‘Coffee Mode’ is th...) (gemini-2.0-flash-lite): Prompt=170, Candidates=73, Total=243
+2025-04-03 19:42:52,803 - INFO - src.processing - Cumulative Tokens: 12977
+2025-04-03 19:42:52,804 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Zencoder’s ‘Coffee Mode’ is th...)...
+2025-04-03 19:42:52,941 - INFO - src.processing - Gemini call for Basic Summary (What you need to know about Am...) completed in 1.18 seconds.
+2025-04-03 19:42:52,941 - INFO - src.processing - Token Usage for Basic Summary (What you need to know about Am...) (gemini-2.0-flash-lite): Prompt=166, Candidates=91, Total=257
+2025-04-03 19:42:52,942 - INFO - src.processing - Cumulative Tokens: 13234
+2025-04-03 19:42:52,942 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (What you need to know about Am...)...
+2025-04-03 19:42:53,564 - INFO - src.processing - Gemini call for Deeper Analysis (Augment Code debuts AI agent w...) completed in 0.77 seconds.
+2025-04-03 19:42:53,565 - INFO - src.processing - Token Usage for Deeper Analysis (Augment Code debuts AI agent w...) (gemini-2.0-flash): Prompt=760, Candidates=85, Total=845
+2025-04-03 19:42:53,565 - INFO - src.processing - Cumulative Tokens: 14079
+2025-04-03 19:42:53,566 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (How Amex uses AI to increase e...)...
+2025-04-03 19:42:53,973 - INFO - src.processing - Gemini call for Deeper Analysis (What you need to know about Am...) completed in 1.03 seconds.
+2025-04-03 19:42:53,975 - INFO - src.processing - Token Usage for Deeper Analysis (What you need to know about Am...) (gemini-2.0-flash): Prompt=769, Candidates=109, Total=878
+2025-04-03 19:42:53,976 - INFO - src.processing - Cumulative Tokens: 14957
+2025-04-03 19:42:53,977 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (DeepMind’s 145-page paper on A...)...
+2025-04-03 19:42:54,175 - INFO - src.processing - Gemini call for Deeper Analysis (Zencoder’s ‘Coffee Mode’ is th...) completed in 1.37 seconds.
+2025-04-03 19:42:54,176 - INFO - src.processing - Token Usage for Deeper Analysis (Zencoder’s ‘Coffee Mode’ is th...) (gemini-2.0-flash): Prompt=755, Candidates=161, Total=916
+2025-04-03 19:42:54,176 - INFO - src.processing - Cumulative Tokens: 15873
+2025-04-03 19:42:54,177 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Anthropic launches an AI chatb...)...
+2025-04-03 19:42:54,531 - INFO - src.processing - Gemini call for Basic Summary (How Amex uses AI to increase e...) completed in 0.96 seconds.
+2025-04-03 19:42:54,533 - INFO - src.processing - Token Usage for Basic Summary (How Amex uses AI to increase e...) (gemini-2.0-flash-lite): Prompt=158, Candidates=81, Total=239
+2025-04-03 19:42:54,534 - INFO - src.processing - Cumulative Tokens: 16112
+2025-04-03 19:42:54,535 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (How Amex uses AI to increase e...)...
+2025-04-03 19:42:54,893 - INFO - src.processing - Gemini call for Basic Summary (DeepMind’s 145-page paper on A...) completed in 0.92 seconds.
+2025-04-03 19:42:54,894 - INFO - src.processing - Token Usage for Basic Summary (DeepMind’s 145-page paper on A...) (gemini-2.0-flash-lite): Prompt=158, Candidates=84, Total=242
+2025-04-03 19:42:54,894 - INFO - src.processing - Cumulative Tokens: 16354
+2025-04-03 19:42:54,894 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (DeepMind’s 145-page paper on A...)...
+2025-04-03 19:42:55,177 - INFO - src.processing - Gemini call for Basic Summary (Anthropic launches an AI chatb...) completed in 1.00 seconds.
+2025-04-03 19:42:55,177 - INFO - src.processing - Token Usage for Basic Summary (Anthropic launches an AI chatb...) (gemini-2.0-flash-lite): Prompt=148, Candidates=95, Total=243
+2025-04-03 19:42:55,178 - INFO - src.processing - Cumulative Tokens: 16597
+2025-04-03 19:42:55,178 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Anthropic launches an AI chatb...)...
+2025-04-03 19:42:55,557 - INFO - src.processing - Gemini call for Deeper Analysis (DeepMind’s 145-page paper on A...) completed in 0.66 seconds.
+2025-04-03 19:42:55,559 - INFO - src.processing - Token Usage for Deeper Analysis (DeepMind’s 145-page paper on A...) (gemini-2.0-flash): Prompt=754, Candidates=83, Total=837
+2025-04-03 19:42:55,560 - INFO - src.processing - Cumulative Tokens: 17434
+2025-04-03 19:42:55,561 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Google&#8217;s NotebookLM can ...)...
+2025-04-03 19:42:55,671 - INFO - src.processing - Gemini call for Deeper Analysis (How Amex uses AI to increase e...) completed in 1.13 seconds.
+2025-04-03 19:42:55,673 - INFO - src.processing - Token Usage for Deeper Analysis (How Amex uses AI to increase e...) (gemini-2.0-flash): Prompt=751, Candidates=117, Total=868
+2025-04-03 19:42:55,675 - INFO - src.processing - Cumulative Tokens: 18302
+2025-04-03 19:42:55,676 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (The Roadmap for Mastering MLOp...)...
+2025-04-03 19:42:56,088 - INFO - src.processing - Gemini call for Deeper Analysis (Anthropic launches an AI chatb...) completed in 0.91 seconds.
+2025-04-03 19:42:56,090 - INFO - src.processing - Token Usage for Deeper Analysis (Anthropic launches an AI chatb...) (gemini-2.0-flash): Prompt=755, Candidates=102, Total=857
+2025-04-03 19:42:56,091 - INFO - src.processing - Cumulative Tokens: 19159
+2025-04-03 19:42:56,093 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (How to Evaluate LLMs Using Hug...)...
+2025-04-03 19:42:56,524 - INFO - src.processing - Gemini call for Basic Summary (The Roadmap for Mastering MLOp...) completed in 0.85 seconds.
+2025-04-03 19:42:56,527 - INFO - src.processing - Token Usage for Basic Summary (The Roadmap for Mastering MLOp...) (gemini-2.0-flash-lite): Prompt=136, Candidates=78, Total=214
+2025-04-03 19:42:56,528 - INFO - src.processing - Cumulative Tokens: 19373
+2025-04-03 19:42:56,529 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (The Roadmap for Mastering MLOp...)...
+2025-04-03 19:42:56,573 - INFO - src.processing - Gemini call for Basic Summary (Google&#8217;s NotebookLM can ...) completed in 1.01 seconds.
+2025-04-03 19:42:56,574 - INFO - src.processing - Token Usage for Basic Summary (Google&#8217;s NotebookLM can ...) (gemini-2.0-flash-lite): Prompt=147, Candidates=84, Total=231
+2025-04-03 19:42:56,574 - INFO - src.processing - Cumulative Tokens: 19604
+2025-04-03 19:42:56,575 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Google&#8217;s NotebookLM can ...)...
+2025-04-03 19:42:57,220 - INFO - src.processing - Gemini call for Basic Summary (How to Evaluate LLMs Using Hug...) completed in 1.13 seconds.
+2025-04-03 19:42:57,222 - INFO - src.processing - Token Usage for Basic Summary (How to Evaluate LLMs Using Hug...) (gemini-2.0-flash-lite): Prompt=124, Candidates=96, Total=220
+2025-04-03 19:42:57,223 - INFO - src.processing - Cumulative Tokens: 19824
+2025-04-03 19:42:57,224 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (How to Evaluate LLMs Using Hug...)...
+2025-04-03 19:42:57,456 - INFO - src.processing - Gemini call for Deeper Analysis (The Roadmap for Mastering MLOp...) completed in 0.93 seconds.
+2025-04-03 19:42:57,458 - INFO - src.processing - Token Usage for Deeper Analysis (The Roadmap for Mastering MLOp...) (gemini-2.0-flash): Prompt=726, Candidates=149, Total=875
+2025-04-03 19:42:57,459 - INFO - src.processing - Cumulative Tokens: 20699
+2025-04-03 19:42:57,460 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Agentic GraphRAG for Commercia...)...
+2025-04-03 19:42:57,731 - INFO - src.processing - Gemini call for Deeper Analysis (Google&#8217;s NotebookLM can ...) completed in 1.16 seconds.
+2025-04-03 19:42:57,733 - INFO - src.processing - Token Usage for Deeper Analysis (Google&#8217;s NotebookLM can ...) (gemini-2.0-flash): Prompt=743, Candidates=136, Total=879
+2025-04-03 19:42:57,735 - INFO - src.processing - Cumulative Tokens: 21578
+2025-04-03 19:42:57,737 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (Exploring the Role of Smaller ...)...
+2025-04-03 19:42:57,999 - INFO - src.processing - Gemini call for Deeper Analysis (How to Evaluate LLMs Using Hug...) completed in 0.77 seconds.
+2025-04-03 19:42:58,001 - INFO - src.processing - Token Usage for Deeper Analysis (How to Evaluate LLMs Using Hug...) (gemini-2.0-flash): Prompt=732, Candidates=110, Total=842
+2025-04-03 19:42:58,003 - INFO - src.processing - Cumulative Tokens: 22420
+2025-04-03 19:42:58,004 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash-lite' for task: Basic Summary (5 Affordable Cloud Platforms f...)...
+2025-04-03 19:42:58,482 - INFO - src.processing - Gemini call for Basic Summary (Agentic GraphRAG for Commercia...) completed in 1.02 seconds.
+2025-04-03 19:42:58,484 - INFO - src.processing - Token Usage for Basic Summary (Agentic GraphRAG for Commercia...) (gemini-2.0-flash-lite): Prompt=128, Candidates=101, Total=229
+2025-04-03 19:42:58,485 - INFO - src.processing - Cumulative Tokens: 22649
+2025-04-03 19:42:58,486 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Agentic GraphRAG for Commercia...)...
+2025-04-03 19:42:58,622 - INFO - src.processing - Gemini call for Basic Summary (Exploring the Role of Smaller ...) completed in 0.88 seconds.
+2025-04-03 19:42:58,624 - INFO - src.processing - Token Usage for Basic Summary (Exploring the Role of Smaller ...) (gemini-2.0-flash-lite): Prompt=132, Candidates=79, Total=211
+2025-04-03 19:42:58,625 - INFO - src.processing - Cumulative Tokens: 22860
+2025-04-03 19:42:58,626 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (Exploring the Role of Smaller ...)...
+2025-04-03 19:42:58,972 - INFO - src.processing - Gemini call for Basic Summary (5 Affordable Cloud Platforms f...) completed in 0.97 seconds.
+2025-04-03 19:42:58,974 - INFO - src.processing - Token Usage for Basic Summary (5 Affordable Cloud Platforms f...) (gemini-2.0-flash-lite): Prompt=131, Candidates=88, Total=219
+2025-04-03 19:42:58,975 - INFO - src.processing - Cumulative Tokens: 23079
+2025-04-03 19:42:58,977 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Deeper Analysis (5 Affordable Cloud Platforms f...)...
+2025-04-03 19:42:59,541 - INFO - src.processing - Gemini call for Deeper Analysis (Agentic GraphRAG for Commercia...) completed in 1.05 seconds.
+2025-04-03 19:42:59,543 - INFO - src.processing - Token Usage for Deeper Analysis (Agentic GraphRAG for Commercia...) (gemini-2.0-flash): Prompt=741, Candidates=119, Total=860
+2025-04-03 19:42:59,544 - INFO - src.processing - Cumulative Tokens: 23939
+2025-04-03 19:42:59,777 - INFO - src.processing - Gemini call for Deeper Analysis (5 Affordable Cloud Platforms f...) completed in 0.80 seconds.
+2025-04-03 19:42:59,780 - INFO - src.processing - Token Usage for Deeper Analysis (5 Affordable Cloud Platforms f...) (gemini-2.0-flash): Prompt=731, Candidates=98, Total=829
+2025-04-03 19:42:59,781 - INFO - src.processing - Cumulative Tokens: 24768
+2025-04-03 19:42:59,788 - INFO - src.processing - Gemini call for Deeper Analysis (Exploring the Role of Smaller ...) completed in 1.16 seconds.
+2025-04-03 19:42:59,790 - INFO - src.processing - Token Usage for Deeper Analysis (Exploring the Role of Smaller ...) (gemini-2.0-flash): Prompt=723, Candidates=147, Total=870
+2025-04-03 19:42:59,793 - INFO - src.processing - Cumulative Tokens: 25638
+2025-04-03 19:42:59,803 - INFO - src.summarization - Generated structured data for 7 news/other items and 5 tutorial items.
+2025-04-03 19:42:59,803 - INFO - __main__ - Summarization and analysis complete.
+2025-04-03 19:42:59,804 - INFO - __main__ - Generating custom tutorial...
+2025-04-03 19:42:59,804 - INFO - src.tutorial_generator - Loaded tutorial topics: ['LangGraph basics', 'Label Studio intro', 'Understanding Attention Mechanisms', 'Fine-tuning a small LLM', 'Deploying an open source LLM', 'ML feature engineering', 'LLM evaluation']
+2025-04-03 19:42:59,804 - INFO - src.tutorial_generator - Selected tutorial topic: LangGraph basics
+2025-04-03 19:42:59,805 - INFO - src.tutorial_generator - Requesting tutorial generation for topic: LangGraph basics using gemini-2.0-flash
+2025-04-03 19:42:59,805 - INFO - src.processing - Calling Gemini model 'gemini-2.0-flash' for task: Tutorial Generation (LangGraph basics)...
+2025-04-03 19:43:03,021 - INFO - src.processing - Gemini call for Tutorial Generation (LangGraph basics) completed in 3.22 seconds.
+2025-04-03 19:43:03,023 - INFO - src.processing - Token Usage for Tutorial Generation (LangGraph basics) (gemini-2.0-flash): Prompt=342, Candidates=588, Total=930
+2025-04-03 19:43:03,024 - INFO - src.processing - Cumulative Tokens: 26568
+2025-04-03 19:43:03,025 - INFO - src.tutorial_generator - Successfully generated tutorial for topic: LangGraph basics
+2025-04-03 19:43:03,026 - INFO - __main__ - Tutorial generation complete for topic: LangGraph basics
+2025-04-03 19:43:03,027 - INFO - __main__ - Assembling the digest...
+2025-04-03 19:43:03,051 - INFO - src.assembly - HTML Digest assembly complete.
+2025-04-03 19:43:03,051 - INFO - __main__ - Digest assembly complete.
+2025-04-03 19:43:03,053 - INFO - __main__ - Latest digest saved locally to outputs/last_digest.html
+2025-04-03 19:43:03,054 - INFO - __main__ - Timestamped digest saved locally to logs/digest_20250403_194303.html
+2025-04-03 19:43:03,054 - INFO - __main__ - Email sending is disabled or digest is empty. Skipping email.
+2025-04-03 19:43:03,054 - INFO - __main__ - Updating processed URLs file...
+2025-04-03 19:43:03,054 - ERROR - __main__ - Error saving processed URLs to processed_urls.json: [WinError 3] Le chemin d’accès spécifié est introuvable: ''
+2025-04-03 19:43:03,055 - INFO - __main__ - --- Pipeline Run Summary ---
+2025-04-03 19:43:03,055 - INFO - __main__ - Total execution time: 32.21 seconds
+2025-04-03 19:43:03,056 - INFO - __main__ - Final Token Counts: Prompt=20074, Candidates=6494, Total=26568
+2025-04-03 19:43:03,056 - INFO - __main__ - Daily digest pipeline run finished.
+2025-04-03 19:43:03,056 - INFO - __main__ - Initial run complete.
+2025-04-03 19:43:03,057 - INFO - __main__ - Scheduling daily run at 06:00
+2025-04-03 19:43:03,057 - INFO - __main__ - Scheduler started. Waiting for scheduled jobs... (Press Ctrl+C to stop)
+2025-04-03 19:44:09,048 - INFO - __main__ - Scheduler stopped by user.

@@ -130,11 +130,7 @@ def save_processed_urls(processed_urls, items_in_digest, filepath=PROCESSED_URLS
     urls_to_save = {url: ts.isoformat() for url, ts in updated_processed_urls.items()}
 
     try:
-        # Fix: Only create directory if path has a directory component
-        dir_path = os.path.dirname(filepath)
-        if dir_path:
-            os.makedirs(dir_path, exist_ok=True)
-            
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(urls_to_save, f, indent=2)
         logger.info(f"Saved {len(urls_to_save)} processed URLs (removed {len(processed_urls) - len(updated_processed_urls)} old entries) to {filepath}")

@@ -51,28 +51,31 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
     # --- Convert Tutorial Markdown to HTML ---
     generated_tutorial_html = ""
     # Use the passed-in topic, handle None case
-    tutorial_topic_display = selected_tutorial_topic if selected_tutorial_topic else "No custom tutorial today." [cite: 158]
-    if generated_tutorial_md: # Rename generated_tutorial_md to generated_tutorial_html
+    tutorial_topic_display = selected_tutorial_topic if selected_tutorial_topic else "No custom tutorial today."
+
+    if generated_tutorial_md:
         try:
-            # REMOVE OR COMMENT OUT THIS BLOCK STARTING HERE [cite: 161]
-            # generated_tutorial_html = markdown.markdown(
-            #     generated_tutorial_md,
-            #     extensions=['fenced_code', 'tables', 'sane_lists', 'codehilite'] # Added codehilite
-            # )
-            # REMOVE OR COMMENT OUT THIS BLOCK ENDING HERE
+            # Use markdown library to convert. Enable extensions for better formatting.
+            # Fenced code blocks (```python ... ```) and tables are common.
+            generated_tutorial_html = markdown.markdown(
+                generated_tutorial_md,
+                extensions=['fenced_code', 'tables', 'sane_lists', 'codehilite'] # Added codehilite
+            )
+            # NO LONGER NEED TO EXTRACT TOPIC HERE
+            # topic_match = re.search(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:\\s*(.*?)</h2>', generated_tutorial_html, re.IGNORECASE)
+            # if topic_match:
+            #     tutorial_topic_display = topic_match.group(1).strip()
+            # else:
+            #      logger.warning("Could not extract tutorial topic from converted HTML using regex.")
+            #      # Keep tutorial_topic_display as the passed-in value or default
 
-            # Assign the raw HTML directly (assuming the variable name is updated)
-            generated_tutorial_html = generated_tutorial_html # Or whatever the input variable is named
-
-            # This regex might still be needed if the generator adds an H2 you don't want,
-            # but it should operate on the raw HTML, not the result of a markdown conversion.
-            # Consider coordinating whether the generator or assembly adds the H2.
-            generated_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', generated_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip() [cite: 163]
+            # Still remove the H2 from the converted HTML if it exists
+            generated_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', generated_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip()
 
         except Exception as e:
-            logger.error(f"Failed to process generated tutorial HTML: {e}") # Update error message
-            generated_tutorial_html = "<p><em>Error processing tutorial content.</em></p>"
-            tutorial_topic_display = "Processing Error" # Update error state [cite: 164]
+            logger.error(f"Failed to convert generated tutorial Markdown to HTML: {e}")
+            generated_tutorial_html = "<p><em>Error converting tutorial content to HTML.</em></p>"
+            tutorial_topic_display = "Conversion Error" # Keep this error state
 
 
     # --- Start HTML Document ---
@@ -250,10 +253,12 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
 
     # --- Skill Up Tutorial (Generated) ---
     html_parts.append("<div class=\"section\">")
-    html_parts.append(f'<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - {html.escape(tutorial_topic_display)}</h2>') # This adds the H2
+    # Use HTML H2 tag directly here, not from Markdown conversion
+    # Add id for TOC (C10)
+    html_parts.append(f'<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - {html.escape(tutorial_topic_display)}</h2>')
     if generated_tutorial_html:
-        # Insert the (now correctly handled) HTML directly [cite: 260]
-        html_parts.append(generated_tutorial_html)
+         # Insert the HTML converted from Markdown (with H2 already removed)
+         html_parts.append(generated_tutorial_html)
     else:
         html_parts.append("<p><em>Tutorial generation failed or no topic selected today.</em></p>")
     html_parts.append("</div>")
