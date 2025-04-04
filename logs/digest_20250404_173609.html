@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Daily Digest - April 04, 2025</title>
+<style>
+        body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f9fa; color: #24292e; } /* Updated base color */
+        .container { width: 95%; max-width: 800px; margin: 20px auto; background-color: #ffffff; border: 1px solid #dfe2e5; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); } /* Adjusted border/shadow */
+        .header { background-color: #0366d6; color: #ffffff; padding: 25px 30px; text-align: center; border-bottom: 5px solid #005cc5; } /* GitHub blue */
+        .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+        .header p { margin: 5px 0 0; font-size: 16px; font-style: italic; opacity: 0.9; }
+        .overview { background-color: #f6f8fa; padding: 15px 25px; margin: 25px; border-left: 4px solid #0366d6; border-radius: 4px; } /* Lighter blue */
+        .overview h3 { margin-top: 0; margin-bottom: 10px; color: #005cc5; font-size: 18px; }
+        .overview ul { margin: 0; padding-left: 20px; }
+        .overview li { margin-bottom: 5px; }
+        .section { padding: 20px 30px; border-bottom: 1px solid #eaecef; } /* Lighter border */
+        .section:last-child { border-bottom: none; }
+        .section h2 { background-color: #f6f8fa; padding: 12px 20px; margin: -20px -30px 20px -30px; font-size: 20px; font-weight: 600; color: #24292e; border-bottom: 1px solid #eaecef; display: flex; align-items: center; } /* Lighter header */
+        .section h2 img.google-icon { margin-right: 8px; }
+        .item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px dashed #d1d5da; } /* Slightly darker dashed border */
+        .item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .item h3 { margin-top: 0; margin-bottom: 5px; font-size: 18px; color: #0366d6; font-weight: 600; } /* GitHub blue link color */
+        .item p { margin-top: 5px; margin-bottom: 12px; font-size: 15px; color: #24292e; }
+        .item p strong { color: #24292e; font-weight: 600; }
+        .item a { color: #0366d6; text-decoration: none; }
+        .item a:hover { text-decoration: underline; }
+        .source-link { font-size: 0.9em; color: #586069; margin-top: -8px !important; margin-bottom: 15px !important; word-break: break-all; } /* GitHub secondary text color */
+        .google-icon { width: 16px; height: 16px; vertical-align: middle; }
+        .actionable-ideas-list ul { list-style-type: disc; padding-left: 20px; margin-top: 10px;}
+        .actionable-ideas-list li { background-color: transparent; margin-bottom: 10px; padding: 0; border-left: none; border-radius: 0px; }
+        .actionable-ideas-list li em { color: #586069; font-size: 0.9em; display: block; margin-top: 4px;}
+        .market-pulse-list ul { list-style-type: disc; padding-left: 20px; }
+        .market-pulse-list li { margin-bottom: 8px; }
+        .market-pulse-list li .source-title { color: #586069; font-size: 0.9em; display: block; margin-top: 2px;} /* C.7 */
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #586069; background-color: #f6f8fa; border-top: 1px solid #eaecef; }
+
+        /* Styles for code blocks - aiming for VS Code Light+ look (GitHub inspired) */
+        .codehilite { background: #f6f8fa; border: 1px solid #dfe2e5; padding: 12px 15px; border-radius: 6px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; }
+        .codehilite pre { margin: 0; padding: 0; background: transparent; border: none; font-family: inherit; font-size: inherit; white-space: pre; word-wrap: normal; } /* Ensure pre doesn't add extra styles */
+        /* Pygments Classes - Based on GitHub Light theme */
+        .codehilite .hll { background-color: #fffbdd; } /* Highlighted line */
+        .codehilite .c { color: #6a737d; font-style: italic; } /* Comment */
+        .codehilite .c1 { color: #6a737d; font-style: italic; } /* Comment.Single */
+        .codehilite .cs { color: #6a737d; font-style: italic; } /* Comment.Special */
+        .codehilite .k { color: #d73a49; } /* Keyword */
+        .codehilite .kc { color: #d73a49; } /* Keyword.Constant */
+        .codehilite .kd { color: #d73a49; } /* Keyword.Declaration */
+        .codehilite .kn { color: #d73a49; } /* Keyword.Namespace */
+        .codehilite .kp { color: #d73a49; } /* Keyword.Pseudo */
+        .codehilite .kr { color: #d73a49; } /* Keyword.Reserved */
+        .codehilite .kt { color: #d73a49; } /* Keyword.Type */
+        .codehilite .m { color: #005cc5; } /* Literal.Number */
+        .codehilite .mf { color: #005cc5; } /* Literal.Number.Float */
+        .codehilite .mh { color: #005cc5; } /* Literal.Number.Hex */
+        .codehilite .mi { color: #005cc5; } /* Literal.Number.Integer */
+        .codehilite .mo { color: #005cc5; } /* Literal.Number.Oct */
+        .codehilite .s { color: #032f62; } /* Literal.String */
+        .codehilite .sa { color: #032f62; } /* Literal.String.Affix */
+        .codehilite .sb { color: #032f62; } /* Literal.String.Backtick */
+        .codehilite .sc { color: #032f62; } /* Literal.String.Char */
+        .codehilite .dl { color: #032f62; } /* Literal.String.Delimiter */
+        .codehilite .sd { color: #032f62; font-style: italic; } /* Literal.String.Doc */
+        .codehilite .s2 { color: #032f62; } /* Literal.String.Double */
+        .codehilite .se { color: #005cc5; } /* Literal.String.Escape */
+        .codehilite .sh { color: #032f62; } /* Literal.String.Heredoc */
+        .codehilite .si { color: #032f62; } /* Literal.String.Interpol */
+        .codehilite .sx { color: #032f62; } /* Literal.String.Other */
+        .codehilite .sr { color: #032f62; } /* Literal.String.Regex */
+        .codehilite .s1 { color: #032f62; } /* Literal.String.Single */
+        .codehilite .ss { color: #032f62; } /* Literal.String.Symbol */
+        .codehilite .na { color: #005cc5; } /* Name.Attribute */
+        .codehilite .nb { color: #005cc5; } /* Name.Builtin */
+        .codehilite .nc { color: #6f42c1; } /* Name.Class */
+        .codehilite .no { color: #005cc5; } /* Name.Constant */
+        .codehilite .nd { color: #6f42c1; } /* Name.Decorator */
+        .codehilite .ni { color: #005cc5; } /* Name.Entity */
+        .codehilite .ne { color: #d73a49; font-weight: bold; } /* Name.Exception */
+        .codehilite .nf { color: #6f42c1; } /* Name.Function */
+        .codehilite .nl { color: #d73a49; } /* Name.Label */
+        .codehilite .nn { color: #6f42c1; } /* Name.Namespace */
+        .codehilite .nt { color: #22863a; } /* Name.Tag */
+        .codehilite .nv { color: #e36209; } /* Name.Variable */
+        .codehilite .ow { color: #d73a49; font-weight: bold; } /* Operator.Word */
+        .codehilite .w { color: #bbbbbb; } /* Text.Whitespace */
+        .codehilite .bp { color: #005cc5; } /* Name.Builtin.Pseudo */
+        .codehilite .fm { color: #6f42c1; } /* Name.Function.Magic */
+        .codehilite .py { color: #24292e; } /* Name */
+        .codehilite .vc { color: #e36209; } /* Name.Variable.Class */
+        .codehilite .vg { color: #e36209; } /* Name.Variable.Global */
+        .codehilite .vi { color: #e36209; } /* Name.Variable.Instance */
+        .codehilite .vm { color: #6f42c1; } /* Name.Variable.Magic */
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🚀 AI Daily Digest</h1>
+<p>April 04, 2025</p>
+</div>
+<div class="overview">
+<h3>Today's Highlights:</h3>
+<ul>
+<li>Analysis of <strong>7 key AI developments</strong>.</li>
+<li>Skill up tutorial on: <strong>LangGraph basics</strong>.</li>
+</ul>
+<p style="font-size: 0.9em; margin-top: 15px;">Jump to: 
+<a href="#headlines">Headlines</a> | <a href="#tutorial">Tutorial</a> | <a href="#guides">Guides</a> | <a href="#spotlight">Google Spotlight</a> | <a href="#market">Market</a> | <a href="#actions">Actionable Ideas</a>
+</p>
+</div>
+<div class="section">
+<h2 id="headlines">📰 Top Headlines & Insights</h2>
+<div class='item'>
+<h3>OpenAI says it’ll release o3 after all, delays GPT-5</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/openai-says-itll-release-o3-after-all-delays-gpt-5/" target="_blank">https://techcrunch.com/2025/04/04/openai-says-itll-release-o3-after-all-delays-gpt-5/</a></p>
+<p><strong>Summary:</strong> OpenAI announced it will release o3 after previously hinting it would not, indicating a shift in its product roadmap. The company simultaneously delayed the launch of GPT-5, its next-generation AI model. This strategic move could impact OpenAI&#x27;s competitive positioning in the AI landscape, especially regarding access to new models for users.</p>
+</div>
+<div class='item'>
+<h3>Google is shipping Gemini models faster than its AI safety reports</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/03/google-is-shipping-gemini-models-faster-than-its-ai-safety-reports/" target="_blank">https://techcrunch.com/2025/04/03/google-is-shipping-gemini-models-faster-than-its-ai-safety-reports/</a></p>
+<p><strong>Summary:</strong> Google is rapidly releasing its Gemini AI models, outpacing the release of corresponding safety reports. This accelerated deployment raises concerns about whether thorough safety assessments are keeping pace with technological advancements. The core issue is the potential risk of deploying powerful AI without adequate evaluation and mitigation of potential harms. This faster release schedule emphasizes the intense competition in the AI industry.</p>
+</div>
+<div class='item'>
+<h3>What you need to know about Amazon Nova Act: the new AI agent SDK challenging OpenAI, Microsoft, Salesforce</h3>
+<p class='source-link'><a href="https://venturebeat.com/ai/what-you-need-to-know-about-amazon-nova-act-the-new-ai-agent-sdk-challenging-openai-microsoft-salesforce/" target="_blank">https://venturebeat.com/ai/what-you-need-to-know-about-amazon-nova-act-the-new-ai-agent-sdk-challenging-openai-microsoft-salesforce/</a></p>
+<p><strong>Summary:</strong> Amazon is entering the AI agent space with a new SDK called Nova Act, aiming to directly compete with industry leaders like OpenAI, Microsoft, and Salesforce. This SDK provides developers with tools to build and deploy AI agents, potentially lowering the barrier to entry. Amazon&#x27;s move signifies a significant push in the AI market, promising innovation and competition in agent-based AI applications.</p>
+</div>
+<div class='item'>
+<h3>Cyberattacks by AI agents are coming</h3>
+<p class='source-link'><a href="https://www.technologyreview.com/2025/04/04/1114228/cyberattacks-by-ai-agents-are-coming/" target="_blank">https://www.technologyreview.com/2025/04/04/1114228/cyberattacks-by-ai-agents-are-coming/</a></p>
+<p><strong>Summary:</strong> The article highlights the looming threat of cyberattacks orchestrated by AI agents. This poses a significant concern for businesses, particularly startups, as AI-powered attacks become more sophisticated. The piece likely delves into both the technical aspects of these threats and the practical measures needed for defense. Ultimately, the core takeaway is the urgent need for proactive cybersecurity strategies to counter the evolving capabilities of AI in the realm of cyber warfare.</p>
+</div>
+<div class='item'>
+<h3>OpenAI just made its first cybersecurity investment</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/03/openai-just-made-its-first-cybersecurity-investment/" target="_blank">https://techcrunch.com/2025/04/03/openai-just-made-its-first-cybersecurity-investment/</a></p>
+<p><strong>Summary:</strong> OpenAI has entered the cybersecurity arena by making its first investment in a cybersecurity company. This move signals OpenAI&#x27;s growing focus on protecting AI systems and their potential to impact the broader digital landscape. The investment highlights the strategic importance of cybersecurity for OpenAI&#x27;s future and indicates they&#x27;re addressing vulnerabilities. This investment could lead to improved security for their own models and also open them up to the competitive cybersecurity market.</p>
+</div>
+<div class='item'>
+<h3>Devin, the viral coding AI agent, gets a new pay-as-you-go plan</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/03/devin-the-viral-coding-ai-agent-gets-a-new-pay-as-you-go-plan/" target="_blank">https://techcrunch.com/2025/04/03/devin-the-viral-coding-ai-agent-gets-a-new-pay-as-you-go-plan/</a></p>
+<p><strong>Summary:</strong> Devin, the AI coding agent that went viral, has introduced a pay-as-you-go pricing plan. This shift allows users to pay only for the resources Devin utilizes, rather than a flat subscription fee. The new pricing structure aims to make Devin more accessible and flexible for developers of varying needs and project scales. This indicates a move towards greater practicality in the use of AI for software development.</p>
+</div>
+<div class='item'>
+<h3>OpenAI’s o3 model might be costlier to run than originally estimated</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/02/openais-o3-model-might-be-costlier-to-run-than-originally-estimated/" target="_blank">https://techcrunch.com/2025/04/02/openais-o3-model-might-be-costlier-to-run-than-originally-estimated/</a></p>
+<p><strong>Summary:</strong> OpenAI&#x27;s O3 AI model is potentially more expensive to operate than initial estimates suggested. This increase in cost impacts the practical deployment of the model, making cost analysis and planning crucial. The article highlights the importance of understanding these expenses for businesses considering utilizing the O3 model. The primary takeaway is that organizations should carefully consider running costs when evaluating and implementing the O3 model.</p>
+</div>
+</div>
+<div class="section">
+<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - LangGraph basics</h2>
+<p>This tutorial provides a concise introduction to LangGraph, focusing on building a simple graph-based agent workflow.  We'll build a simple agent that decides whether to search the internet or answer a question directly.</p>
+
+<h3>Objective</h3>
+<p>To create a basic LangGraph workflow with a decision node and two possible actions.</p>
+
+<h3>Step 1: Installation and Setup</h3>
+<p>First, install the required LangChain and LangGraph packages.</p>
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #959077"># Install necessary libraries</span>
+<span style="color: #ED007E; background-color: #1E0010">!</span><span style="color: #F8F8F2">pip</span> <span style="color: #F8F8F2">install</span> <span style="color: #FF4689">-</span><span style="color: #F8F8F2">U</span> <span style="color: #F8F8F2">langchain</span> <span style="color: #F8F8F2">langchain</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">google</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">vertexai</span> <span style="color: #F8F8F2">langgraph</span> <span style="color: #F8F8F2">tavily</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">python</span>
+</div>
+</code></pre></div>
+
+<p>Next, set up your environment. You'll need a Google Cloud project and API keys. Configure your Google Cloud credentials.</p>
+
+<h3>Step 2: Define the Components</h3>
+<p>We'll create a simple Language Model (LLM) and a search tool. For brevity, we'll use the Google Vertex AI model and Tavily Search.  Remember to obtain and set the required API keys.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">import</span><span style="color: #F8F8F2"> os</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_google_vertexai </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">VertexAI</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain.tools </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">tool</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.prompts </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">ChatPromptTemplate,</span> <span style="color: #F8F8F2">MessagesPlaceholder</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.runnables </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">chain</span>
+
+<span style="color: #959077"># Set up environment variables (replace with your actual keys)</span>
+<span style="color: #F8F8F2">os</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">environ[</span><span style="color: #E6DB74">&quot;TAVILY_API_KEY&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #FF4689">=</span> <span style="color: #E6DB74">&quot;YOUR_TAVILY_API_KEY&quot;</span>  <span style="color: #959077"># Replace with your Tavily API Key</span>
+
+<span style="color: #959077"># Initialize LLM</span>
+<span style="color: #F8F8F2">llm</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">VertexAI(model_name</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;gemini-1.5-pro-001&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">temperature</span><span style="color: #FF4689">=</span><span style="color: #AE81FF">0.1</span><span style="color: #F8F8F2">)</span>
+
+<span style="color: #959077"># Define a tool</span>
+<span style="color: #A6E22E">@tool</span>
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">search_internet</span><span style="color: #F8F8F2">(query:</span> <span style="color: #F8F8F2">str)</span> <span style="color: #FF4689">-&gt;</span> <span style="color: #F8F8F2">str:</span>
+<span style="color: #F8F8F2">    </span><span style="color: #E6DB74">&quot;&quot;&quot;Useful for searching the internet for current events or general knowledge.&quot;&quot;&quot;</span>
+    <span style="color: #FF4689">from</span><span style="color: #F8F8F2"> tavily </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">TavilyClient</span>
+
+    <span style="color: #F8F8F2">tavily</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">TavilyClient(api_key</span><span style="color: #FF4689">=</span><span style="color: #F8F8F2">os</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">environ[</span><span style="color: #E6DB74">&quot;TAVILY_API_KEY&quot;</span><span style="color: #F8F8F2">])</span>
+    <span style="color: #F8F8F2">results</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">tavily</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">search(query</span><span style="color: #FF4689">=</span><span style="color: #F8F8F2">query)</span>
+    <span style="color: #66D9EF">return</span> <span style="color: #F8F8F2">results</span>
+
+<span style="color: #F8F8F2">tools</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">[search_internet]</span>
+
+<span style="color: #959077"># Define prompt</span>
+<span style="color: #F8F8F2">prompt</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">ChatPromptTemplate</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">from_messages([</span>
+    <span style="color: #F8F8F2">(</span><span style="color: #E6DB74">&quot;system&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #E6DB74">&quot;You are a helpful assistant. Answer the user&#39;s questions.&quot;</span><span style="color: #F8F8F2">),</span>
+    <span style="color: #F8F8F2">MessagesPlaceholder(variable_name</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">),</span>
+    <span style="color: #F8F8F2">MessagesPlaceholder(variable_name</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;agent_scratchpad&quot;</span><span style="color: #F8F8F2">)</span>
+<span style="color: #F8F8F2">])</span>
+
+<span style="color: #959077"># Define agent</span>
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">get_response</span><span style="color: #F8F8F2">(messages,</span> <span style="color: #F8F8F2">agent_scratchpad):</span>
+    <span style="color: #F8F8F2">formatted_prompt</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">prompt</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">format_messages(messages</span><span style="color: #FF4689">=</span><span style="color: #F8F8F2">messages,</span> <span style="color: #F8F8F2">agent_scratchpad</span><span style="color: #FF4689">=</span><span style="color: #F8F8F2">agent_scratchpad)</span>
+    <span style="color: #66D9EF">return</span> <span style="color: #F8F8F2">llm</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke(formatted_prompt)</span>
+
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">parse_response</span><span style="color: #F8F8F2">(response):</span>
+    <span style="color: #66D9EF">if</span> <span style="color: #E6DB74">&quot;I need to use a tool&quot;</span> <span style="color: #FF4689">in</span> <span style="color: #F8F8F2">response:</span>
+        <span style="color: #66D9EF">return</span> <span style="color: #E6DB74">&quot;search&quot;</span>
+    <span style="color: #66D9EF">else</span><span style="color: #F8F8F2">:</span>
+        <span style="color: #66D9EF">return</span> <span style="color: #E6DB74">&quot;answer&quot;</span>
+
+<span style="color: #F8F8F2">agent</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">chain({</span>
+    <span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #66D9EF">lambda</span> <span style="color: #F8F8F2">x:</span> <span style="color: #F8F8F2">x[</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">],</span>
+    <span style="color: #E6DB74">&quot;agent_scratchpad&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #66D9EF">lambda</span> <span style="color: #F8F8F2">x:</span> <span style="color: #F8F8F2">x[</span><span style="color: #E6DB74">&quot;agent_scratchpad&quot;</span><span style="color: #F8F8F2">]</span>
+<span style="color: #F8F8F2">},</span> <span style="color: #F8F8F2">get_response)</span> <span style="color: #FF4689">|</span> <span style="color: #F8F8F2">parse_response</span>
+
+<span style="color: #F8F8F2">tool_map</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">{tool</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">name:</span> <span style="color: #F8F8F2">tool</span> <span style="color: #66D9EF">for</span> <span style="color: #F8F8F2">tool</span> <span style="color: #FF4689">in</span> <span style="color: #F8F8F2">tools}</span>
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">call_tool</span><span style="color: #F8F8F2">(tool_name,</span> <span style="color: #F8F8F2">messages,</span> <span style="color: #F8F8F2">agent_scratchpad):</span>
+    <span style="color: #F8F8F2">input_text</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">agent_scratchpad[</span><span style="color: #FF4689">-</span><span style="color: #AE81FF">1</span><span style="color: #F8F8F2">]</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">content</span>
+    <span style="color: #66D9EF">return</span> <span style="color: #F8F8F2">tool_map[tool_name]</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke({</span><span style="color: #E6DB74">&quot;query&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">input_text})</span>
+</div>
+</code></pre></div>
+
+<h3>Step 3: Construct the LangGraph</h3>
+
+<p>Now, let's define the graph. We'll use three nodes: <code>agent</code>, <code>search</code>, and <code>answer</code>.  We'll also define a state object to hold the agent's memory.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langgraph.graph </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">StateGraph,</span> <span style="color: #F8F8F2">MessageGraph</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> typing </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">TypedDict,</span> <span style="color: #F8F8F2">List,</span> <span style="color: #F8F8F2">Dict,</span> <span style="color: #F8F8F2">Any</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.messages </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">BaseMessage</span>
+
+<span style="color: #66D9EF">class</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">AgentState</span><span style="color: #F8F8F2">(TypedDict):</span>
+    <span style="color: #F8F8F2">messages:</span> <span style="color: #F8F8F2">List[BaseMessage]</span>
+    <span style="color: #F8F8F2">agent_scratchpad:</span> <span style="color: #F8F8F2">List[BaseMessage]</span>
+    <span style="color: #F8F8F2">steps:</span> <span style="color: #F8F8F2">List[List[str]]</span>
+
+<span style="color: #F8F8F2">workflow</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">StateGraph(AgentState)</span>
+
+<span style="color: #959077"># Define nodes</span>
+<span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;agent&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">agent)</span>
+<span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;search&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">call_tool)</span>
+<span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;answer&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #66D9EF">lambda</span> <span style="color: #F8F8F2">x:</span> <span style="color: #F8F8F2">x[</span><span style="color: #E6DB74">&quot;agent_scratchpad&quot;</span><span style="color: #F8F8F2">][</span><span style="color: #FF4689">-</span><span style="color: #AE81FF">1</span><span style="color: #F8F8F2">]</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">content)</span> <span style="color: #959077"># this will be the last content message</span>
+
+<span style="color: #959077"># Define edges</span>
+<span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">set_entry_point(</span><span style="color: #E6DB74">&quot;agent&quot;</span><span style="color: #F8F8F2">)</span>
+<span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_conditional_edges(</span>
+    <span style="color: #E6DB74">&quot;agent&quot;</span><span style="color: #F8F8F2">,</span>
+    <span style="color: #66D9EF">lambda</span> <span style="color: #F8F8F2">x:</span> <span style="color: #E6DB74">&quot;search&quot;</span> <span style="color: #66D9EF">if</span> <span style="color: #F8F8F2">x</span> <span style="color: #FF4689">==</span> <span style="color: #E6DB74">&quot;search&quot;</span> <span style="color: #66D9EF">else</span> <span style="color: #E6DB74">&quot;answer&quot;</span><span style="color: #F8F8F2">,</span>
+    <span style="color: #F8F8F2">{</span>
+        <span style="color: #E6DB74">&quot;search&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #E6DB74">&quot;search&quot;</span><span style="color: #F8F8F2">,</span>
+        <span style="color: #E6DB74">&quot;answer&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #E6DB74">&quot;answer&quot;</span>
+    <span style="color: #F8F8F2">}</span>
+<span style="color: #F8F8F2">)</span>
+
+<span style="color: #959077"># Build graph</span>
+<span style="color: #F8F8F2">graph</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">workflow</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">compile()</span>
+</div>
+</code></pre></div>
+
+<h3>Step 4: Run the Graph</h3>
+
+<p>Finally, let's run the graph with an example question.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.messages </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">HumanMessage,</span> <span style="color: #F8F8F2">AIMessage</span>
+
+<span style="color: #F8F8F2">inputs</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">{</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">[HumanMessage(content</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;What is the current temperature in London?&quot;</span><span style="color: #F8F8F2">)],</span> <span style="color: #E6DB74">&quot;agent_scratchpad&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">[]}</span>
+<span style="color: #F8F8F2">result</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">graph</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke(inputs)</span>
+
+<span style="color: #F8F8F2">print(result)</span>
+</div>
+</code></pre></div>
+
+<h3>Key Considerations for Production</h3>
+<ul>
+    <li><strong>API Key Management:</strong>  Use secure methods (e.g., environment variables, secret management services like Google Cloud Secret Manager) for storing and accessing API keys.</li>
+    <li><strong>Error Handling:</strong> Implement robust error handling and retry mechanisms within each node of the graph. Use LangChain's callback system for monitoring and logging.</li>
+    <li><strong>State Management:</strong>  Consider the scalability and persistence of the agent's state, especially for long-running conversations.  Options include in-memory storage (for prototyping), Redis, or a dedicated vector database for more complex scenarios.</li>
+    <li><strong>Observability:</strong>  Integrate with tracing tools like LangSmith or other monitoring solutions to track the performance and behavior of your LangGraph workflows.  Pay close attention to latency and cost per request.</li>
+    <li><strong>Security:</strong> Sanitize user inputs to prevent prompt injection attacks.  Be mindful of the data privacy implications of your agent's actions.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="guides">⚙️ Guides & Tutorials From Your Feeds</h2>
+<div class='item'>
+<h3>5 Affordable Cloud Platforms for Fine-tuning LLMs</h3>
+<p class='source-link'><a href="https://www.analyticsvidhya.com/blog/2025/04/5-affordable-cloud-platforms-for-fine-tuning-llms/" target="_blank">https://www.analyticsvidhya.com/blog/2025/04/5-affordable-cloud-platforms-for-fine-tuning-llms/</a></p>
+<p><strong>Summary:</strong> This article highlights five budget-friendly cloud platforms suitable for fine-tuning large language models (LLMs). Fine-tuning LLMs is presented as a crucial technical skill, particularly for Chief Technology Officers (CTOs). The guide aims to provide practical recommendations and resources for effective and affordable LLM customization. By leveraging these platforms, users can tailor LLMs to specific needs without incurring excessive costs.</p>
+</div>
+<div class='item'>
+<h3>Top 10 Tools for Agent Ops</h3>
+<p class='source-link'><a href="https://www.analyticsvidhya.com/blog/2025/04/top-tools-for-agent-ops/" target="_blank">https://www.analyticsvidhya.com/blog/2025/04/top-tools-for-agent-ops/</a></p>
+<p><strong>Summary:</strong> This article highlights the top 10 tools crucial for &quot;Agent Ops,&quot; the operational side of deploying and managing AI agents. It focuses on practical solutions for tasks like deployment, monitoring, and optimization. The content is particularly relevant to CTOs, as it helps them navigate the complexities of managing AI agent infrastructure. Understanding and implementing these tools is vital for efficient and effective AI agent performance.</p>
+</div>
+</div>
+<div class="section">
+<h2 id="spotlight"><img src="https://www.google.com/favicon.ico" class="google-icon" alt="G"> Google Spotlight</h2>
+<ul>
+<li><a href="https://techcrunch.com/2025/04/03/google-is-shipping-gemini-models-faster-than-its-ai-safety-reports/" target="_blank">📰 Google is shipping Gemini models faster than its AI safety reports</a></li>
+</ul>
+</div>
+<div class="section market-pulse-list">
+<h2 id="market">📈 Market Pulse</h2>
+<p><em>Key market shifts and competitive observations today include:</em></p>
+<p><em>No specific market analysis points identified in today's items.</em></p>
+</div>
+<div class="section actionable-ideas-list">
+<h2 id="actions">⚡ Actionable Ideas & Questions</h2>
+<p><em>No specific project applications identified in today's items based on provided context.</em></p>
+</div>
+<div class="footer">
+Generated by AI Digest Agent.
+</div>
+</div>
+</body>
+</html>
