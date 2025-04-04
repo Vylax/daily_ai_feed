@@ -16,6 +16,10 @@ This project implements an automated pipeline using Python and the Google Gemini
 *   Scheduled daily execution using the `schedule` library or runs once.
 *   Configuration managed via a `config.yaml` file.
 *   Includes basic unit tests for email sending (`tests/test_email.py`).
+*   **URL Deduplication:** Prevents duplicate content by tracking processed URLs across runs with configurable time window.
+*   **Project Context Integration:** Imports details about ongoing projects to generate more relevant, actionable insights.
+*   **Resend Feature:** Command-line option to resend the last generated digest without regenerating content.
+*   **Directory Structure Management:** Automatically creates required directories (logs, outputs, data) if they don't exist.
 
 ## Prerequisites
 
@@ -50,7 +54,7 @@ This project implements an automated pipeline using Python and the Google Gemini
         ```bash
         pip install -r requirements.txt
         ```
-        *(Make sure `requirements.txt` includes `google-generativeai`, `feedparser`, `schedule`, `markdown`, `PyYAML`, `python-dotenv`)*
+        *(The `requirements.txt` includes `google-generativeai`, `feedparser`, `schedule`, `markdown`, `PyYAML`, `python-dotenv`, `beautifulsoup4`, `lxml`, and `pymdown-extensions`)*
 
 4.  **Configure `config.yaml`:**
     *   Copy the example configuration file: `cp config.example.yaml config.yaml` (or `copy config.example.yaml config.yaml` on Windows).
@@ -74,15 +78,24 @@ This project implements an automated pipeline using Python and the Google Gemini
             *   If using `sendgrid`, provide your `sendgrid_api_key` (and uncomment the SendGrid code in `src/email_utils.py` and potentially install `pip install sendgrid`).
         *   **Scheduling:** Configure `run_mode` (`schedule` or `once`), `schedule_time`, and `schedule_initial_run`.
 
-5.  **Run the Agent:**
+5.  **Set Up Project Context:**
+    *   Edit the `project_context.md` file with information about your current projects.
+    *   This information will be used to generate more relevant actionable insights.
+    *   If the file doesn't exist, a placeholder will be created on first run.
+
+6.  **Run the Agent:**
     ```bash
     python main.py
     ```
     *   Based on `run_mode` in `config.yaml`, the script will either run the pipeline once or start the scheduler.
     *   If scheduling, the first run may happen immediately based on `schedule_initial_run` and subsequent runs occur daily at `schedule_time`.
     *   Logs will be created in the `logs/` directory, including total token counts and estimated cost (if enabled).
+    *   To resend the last generated digest without regenerating content:
+    ```bash
+    python main.py --resend
+    ```
 
-6.  **Run Tests (Optional):**
+7.  **Run Tests (Optional):**
     ```bash
     python -m unittest discover tests
     ```
@@ -91,11 +104,16 @@ This project implements an automated pipeline using Python and the Google Gemini
 
 ```
 .
-├── config.example.yaml   # Example configuration file
-├── config.yaml           # Your actual configuration (Create this!)
+├── config.yaml           # Your configuration file
 ├── main.py               # Main script: Orchestration and scheduling
 ├── requirements.txt      # Python dependencies
-├── logs/                 # Log files and saved digests (created on run)
+├── project_context.md    # Information about current projects for tailored insights
+├── processed_urls.json   # Tracks previously processed URLs for deduplication
+├── .env                  # Environment variables (alternative to config.yaml)
+├── .env.example          # Example environment variables
+├── data/                 # Directory for data storage
+├── logs/                 # Log files and token usage statistics
+├── outputs/              # Saved digests and other outputs
 ├── src/                  # Source code modules
 │   ├── __init__.py
 │   ├── assembly.py         # Assembles the final Markdown digest
@@ -105,10 +123,9 @@ This project implements an automated pipeline using Python and the Google Gemini
 │   ├── processing.py       # Filters/tags items using Gemini API, tracks tokens
 │   ├── summarization.py    # Summarizes/analyzes items using Gemini API (2 steps)
 │   └── tutorial_generator.py # Generates custom tutorials using Gemini API
-├── tests/                # Unit tests
-│   ├── __init__.py
-│   └── test_email.py       # Tests for email sending logic
-└── README.md             # This file
+└── tests/                # Unit tests
+    ├── __init__.py
+    └── test_email.py       # Tests for email sending logic
 ```
 
 ## Customization
@@ -116,6 +133,7 @@ This project implements an automated pipeline using Python and the Google Gemini
 *   **Configuration:** Most parameters (feeds, limits, models, schedule, emails, etc.) are controlled via `config.yaml`.
 *   **Prompts:** Edit the prompt templates directly within the `processing.py`, `summarization.py`, and `tutorial_generator.py` files to tailor the AI's behavior.
 *   **Digest Structure:** Modify `src/assembly.py` to change the layout or sections of the Markdown digest.
+*   **Project Context:** Update `project_context.md` with details about your current projects to receive more relevant actionable insights.
 
 ## Token Cost Estimation (Gemini API)
 
