@@ -16,7 +16,7 @@ from src.assembly import assemble_digest
 from src.email_utils import send_email
 
 # --- Constants ---
-PROCESSED_URLS_FILE = "processed_urls.json"
+PROCESSED_URLS_FILE = "data/processed_urls.json"
 LAST_DIGEST_FILE = "outputs/last_digest.html"
 PROJECT_CONTEXT_FILE = "project_context.md"
 
@@ -24,6 +24,14 @@ PROJECT_CONTEXT_FILE = "project_context.md"
 # Create logs directory if it doesn't exist
 if not os.path.exists('logs'):
     os.makedirs('logs')
+
+# Create outputs directory if it doesn't exist
+if not os.path.exists('outputs'):
+    os.makedirs('outputs')
+
+# Create data directory if it doesn't exist
+if not os.path.exists('data'):
+    os.makedirs('data')
 
 log_filename = f"logs/ai_digest_agent_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 logging.basicConfig(
@@ -94,21 +102,25 @@ def load_project_context(filepath=PROJECT_CONTEXT_FILE):
 
 # --- Deduplication Functions (C8) ---
 def load_processed_urls(filepath=PROCESSED_URLS_FILE):
-    """Loads processed URLs and their timestamps from a JSON file."""
-    try:
-        if os.path.exists(filepath):
+    """Loads the list of processed URLs with timestamps."""
+    processed_urls = {}
+    if os.path.exists(filepath):
+        try:
             with open(filepath, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                # Convert timestamps back to datetime objects for comparison
-                processed = {url: datetime.datetime.fromisoformat(ts) for url, ts in data.items()}
-                logger.info(f"Loaded {len(processed)} processed URLs from {filepath}")
-                return processed
-        else:
-            logger.info(f"Processed URLs file {filepath} not found, starting fresh.")
-            return {}
-    except (json.JSONDecodeError, Exception) as e:
-        logger.error(f"Error loading or parsing {filepath}: {e}. Starting fresh.")
-        return {}
+                processed_urls_raw = json.load(f)
+                # Convert ISO timestamp strings back to datetime objects
+                processed_urls = {url: datetime.datetime.fromisoformat(timestamp) 
+                                   for url, timestamp in processed_urls_raw.items()}
+            logger.info(f"Loaded {len(processed_urls)} processed URLs for deduplication.")
+        except Exception as e:
+            logger.error(f"Error loading processed URLs from {filepath}: {e}")
+    else:
+        logger.info(f"No processed URLs file found at {filepath}, starting fresh.")
+        # Create directory structure if it doesn't exist
+        if os.path.dirname(filepath):
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    
+    return processed_urls
 
 def save_processed_urls(processed_urls, items_in_digest, filepath=PROCESSED_URLS_FILE):
     """Saves current digest URLs and removes old entries."""
@@ -130,12 +142,15 @@ def save_processed_urls(processed_urls, items_in_digest, filepath=PROCESSED_URLS
     urls_to_save = {url: ts.isoformat() for url, ts in updated_processed_urls.items()}
 
     try:
-        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        # Create directory structure if it doesn't exist
+        if filepath and os.path.dirname(filepath):
+            os.makedirs(os.path.dirname(filepath), exist_ok=True)
         with open(filepath, 'w', encoding='utf-8') as f:
             json.dump(urls_to_save, f, indent=2)
         logger.info(f"Saved {len(urls_to_save)} processed URLs (removed {len(processed_urls) - len(updated_processed_urls)} old entries) to {filepath}")
     except Exception as e:
         logger.error(f"Error saving processed URLs to {filepath}: {e}")
+        logger.error(f"Current working directory: {os.getcwd()}")
 
 # --- Main Workflow Function ---
 def run_daily_digest_pipeline(config, args):
@@ -205,11 +220,11 @@ def run_daily_digest_pipeline(config, args):
     logger.info("Generating custom tutorial...")
     load_tutorial_topics(config.get('initial_tutorial_topics', []))
     selected_topic = select_tutorial_topic()
-    generated_tutorial_md = None
+    generated_tutorial_html = None
     if selected_topic:
         # Pass config instead of gemini_model
-        generated_tutorial_md = generate_tutorial(selected_topic, config)
-        if not generated_tutorial_md:
+        generated_tutorial_html = generate_tutorial(selected_topic, config)
+        if not generated_tutorial_html:
             logger.warning(f"Failed to generate tutorial for topic: {selected_topic}")
         else:
             logger.info(f"Tutorial generation complete for topic: {selected_topic}")
@@ -219,7 +234,7 @@ def run_daily_digest_pipeline(config, args):
     # 7. Assembly - Create Digest
     logger.info("Assembling the digest...")
     # Pass the structured data and the selected_topic to assemble_digest
-    final_digest_html = assemble_digest(news_data, feed_tutorials_data, generated_tutorial_md, selected_topic)
+    final_digest_html = assemble_digest(news_data, feed_tutorials_data, generated_tutorial_html, selected_topic, code_theme='monokai', dark_code=True)
     logger.info("Digest assembly complete.")
 
     # Save digest locally BEFORE sending (C9)
@@ -243,17 +258,42 @@ def run_daily_digest_pipeline(config, args):
 
     # 8. Delivery - Send Email
     send_attempted = False
-    if config.get('email_config') and config['email_config'].get('enabled', False) and final_digest_html:
+    # Make sure email_config exists and is enabled
+    if not config.get('email_config'):
+        # Create email_config if it doesn't exist
+        config['email_config'] = {
+            'enabled': True,
+            'email_provider': 'smtp',
+            'smtp_server': config.get('smtp_server'),
+            'smtp_port': config.get('smtp_port'),
+            'smtp_username': config.get('smtp_username'),
+            'smtp_password': config.get('smtp_password'),
+            'sender_email': config.get('sender_email'),
+            'recipient_email': config.get('recipient_email')
+        }
+        logger.info("Created email_config section in configuration")
+    elif not config['email_config'].get('enabled'):
+        # Enable email if it's disabled
+        config['email_config']['enabled'] = True
+        logger.info("Enabled email sending in configuration")
+
+    if config.get('email_config') and config['email_config'].get('enabled', True) and final_digest_html:
         logger.info("Sending digest email...")
         email_subject = f"AI Daily Digest - {datetime.datetime.now().strftime('%B %d, %Y')}"
         email_sent = send_email(
             subject=email_subject,
-            html_content=final_digest_html,
+            html_body=final_digest_html,
             config=config.get('email_config')
         )
         send_attempted = True
     else:
         logger.info("Email sending is disabled or digest is empty. Skipping email.")
+        if not final_digest_html:
+            logger.warning("Digest is empty - no content to send")
+        elif not config.get('email_config'):
+            logger.warning("Email configuration is missing")
+        elif not config['email_config'].get('enabled'):
+            logger.warning("Email sending is explicitly disabled in config")
         email_sent = False # Explicitly set to false if not attempted
 
     # 9. Update Processed URLs (B.4) - *After* successful send or if send was not attempted but digest was generated
@@ -294,7 +334,26 @@ def resend_last_digest(config):
     logger.info("Attempting to resend the last digest...")
     last_digest_path = Path(LAST_DIGEST_FILE)
 
-    if not config.get('email_config') or not config['email_config'].get('enabled', False):
+    # Make sure email_config exists and is enabled
+    if not config.get('email_config'):
+        # Create email_config if it doesn't exist
+        config['email_config'] = {
+            'enabled': True,
+            'email_provider': 'smtp',
+            'smtp_server': config.get('smtp_server'),
+            'smtp_port': config.get('smtp_port'),
+            'smtp_username': config.get('smtp_username'),
+            'smtp_password': config.get('smtp_password'),
+            'sender_email': config.get('sender_email'),
+            'recipient_email': config.get('recipient_email')
+        }
+        logger.info("Created email_config section in configuration for resend")
+    elif not config['email_config'].get('enabled'):
+        # Enable email if it's disabled
+        config['email_config']['enabled'] = True
+        logger.info("Enabled email sending in configuration for resend")
+
+    if not config.get('email_config') or not config['email_config'].get('enabled', True):
         logger.error("Email sending is not enabled in the configuration. Cannot resend.")
         return
 
@@ -314,7 +373,7 @@ def resend_last_digest(config):
 
         email_sent = send_email(
             subject=email_subject,
-            html_content=last_digest_html,
+            html_body=last_digest_html,
             config=config.get('email_config')
         )
 

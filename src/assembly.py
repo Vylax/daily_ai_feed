@@ -3,6 +3,10 @@ import datetime
 import re
 import html # For escaping
 import markdown # Import the markdown library
+# Import Pygments for code highlighting with inline styles
+import pygments
+from pygments.lexers import PythonLexer
+from pygments.formatters import HtmlFormatter
 
 logger = logging.getLogger(__name__)
 
@@ -39,44 +43,89 @@ def get_tutorial_topic_from_html(generated_tutorial_html):
 
 # --- Main Assembly Function (Generates HTML) ---
 
-def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md, selected_tutorial_topic):
-    """Assembles the final HTML digest from the components with improved styling and overview section."""
+def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_html, selected_tutorial_topic, code_theme='monokai', dark_code=True):
+    """Assembles the final HTML digest from the components with improved styling and overview section.
+    
+    Args:
+        news_items_data: List of news items data
+        feed_tutorials_data: List of tutorial items from feeds
+        generated_tutorial_html: HTML content for the tutorial section
+        selected_tutorial_topic: Topic of the tutorial
+        code_theme: Pygments theme name for code highlighting (default: 'monokai')
+        dark_code: Whether to use dark background for code blocks (default: True)
+    """
     now = datetime.datetime.now()
     # Format like: April 3, 2025
     date_str = now.strftime("%B %d, %Y")
 
     # Data format from summarization: [{'url':..., 'title':..., 'type':..., 'summary':..., 'insight':..., 'angle':..., 'move':...}, ...]
-    # Tutorial is still Markdown string: generated_tutorial_md
+    # Tutorial is HTML string: generated_tutorial_html
 
-    # --- Convert Tutorial Markdown to HTML ---
-    generated_tutorial_html = ""
+    # --- Process Tutorial HTML ---
+    processed_tutorial_html = ""
     # Use the passed-in topic, handle None case
     tutorial_topic_display = selected_tutorial_topic if selected_tutorial_topic else "No custom tutorial today."
 
-    if generated_tutorial_md:
+    if generated_tutorial_html:
         try:
-            # Use markdown library to convert. Enable extensions for better formatting.
-            # Fenced code blocks (```python ... ```) and tables are common.
-            generated_tutorial_html = markdown.markdown(
-                generated_tutorial_md,
-                extensions=['fenced_code', 'tables', 'sane_lists', 'codehilite'] # Added codehilite
+            # The tutorial is already in HTML format
+            # Simply use it directly
+            processed_tutorial_html = generated_tutorial_html
+            
+            # Remove the H2 header if it exists as the section will have its own header
+            processed_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', processed_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip()
+            
+            # Remove any leftover Markdown code fences from the beginning/end
+            processed_tutorial_html = re.sub(r'^```html\s*', '', processed_tutorial_html)
+            processed_tutorial_html = re.sub(r'```\s*$', '', processed_tutorial_html)
+            
+            # Setup Pygments for syntax highlighting with inline styles
+            lexer = PythonLexer()
+            
+            # VS Code / Cursor style selection
+            # You can use different styles:
+            # Light themes:
+            # - 'vs' - Most like Visual Studio/VS Code default light theme
+            # - 'xcode' - Similar to VS Code light with better contrast
+            # - 'friendly' - Good readability, similar to some VS Code themes
+            # Dark themes:
+            # - 'monokai' - Dark theme with vibrant colors (similar to VS Code Monokai)
+            # - 'dracula' - Popular dark theme with purple accents
+            # - 'one-dark' - Similar to VS Code dark+ theme
+            formatter = HtmlFormatter(style=code_theme, noclasses=True)
+            
+            # Configure background and styling based on dark_code setting
+            if dark_code:
+                code_bg = "#272822"
+                code_border = "#181a1f"
+                code_text_color = "#abb2bf"
+            else:
+                code_bg = "#ffffff"
+                code_border = "#d4d4d4"
+                code_text_color = "inherit"
+            
+            # Find all code blocks and replace them with syntax highlighted versions
+            def highlight_code_block(match):
+                # Extract the code between <code> and </code> tags
+                code = match.group(2).strip()
+                # Apply syntax highlighting with inline styles
+                highlighted_code = pygments.highlight(code, lexer, formatter)
+                # Make sure we're not using the pre/code tags that Pygments adds
+                highlighted_code = re.sub(r'<pre.*?>(.*?)</pre>', r'\1', highlighted_code, flags=re.DOTALL)
+                # Wrap in our own pre/code tags with proper styling
+                return f'<div style="background: {code_bg}; border: 1px solid {code_border}; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, \'SFMono-Regular\', \'Liberation Mono\', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: {code_text_color};"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python">{highlighted_code}</code></pre></div>'
+            
+            # Apply the highlighting to all code blocks
+            processed_tutorial_html = re.sub(
+                r'<(pre|div class="codehilite"><pre)><code class="language-python">(.*?)</code></pre>(</div>)?', 
+                highlight_code_block, 
+                processed_tutorial_html, 
+                flags=re.DOTALL
             )
-            # NO LONGER NEED TO EXTRACT TOPIC HERE
-            # topic_match = re.search(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:\\s*(.*?)</h2>', generated_tutorial_html, re.IGNORECASE)
-            # if topic_match:
-            #     tutorial_topic_display = topic_match.group(1).strip()
-            # else:
-            #      logger.warning("Could not extract tutorial topic from converted HTML using regex.")
-            #      # Keep tutorial_topic_display as the passed-in value or default
-
-            # Still remove the H2 from the converted HTML if it exists
-            generated_tutorial_html = re.sub(r'<h2(?: id="[^\"]*")?>.*?Skill Up Tutorial:.*?</h2>', '', generated_tutorial_html, count=1, flags=re.IGNORECASE | re.DOTALL).strip()
-
         except Exception as e:
-            logger.error(f"Failed to convert generated tutorial Markdown to HTML: {e}")
-            generated_tutorial_html = "<p><em>Error converting tutorial content to HTML.</em></p>"
+            logger.error(f"Failed to process tutorial HTML: {e}")
+            processed_tutorial_html = "<p><em>Error processing tutorial content.</em></p>"
             tutorial_topic_display = "Conversion Error" # Keep this error state
-
 
     # --- Start HTML Document ---
     html_parts = []
@@ -256,9 +305,9 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
     # Use HTML H2 tag directly here, not from Markdown conversion
     # Add id for TOC (C10)
     html_parts.append(f'<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - {html.escape(tutorial_topic_display)}</h2>')
-    if generated_tutorial_html:
+    if processed_tutorial_html:
          # Insert the HTML converted from Markdown (with H2 already removed)
-         html_parts.append(generated_tutorial_html)
+         html_parts.append(processed_tutorial_html)
     else:
         html_parts.append("<p><em>Tutorial generation failed or no topic selected today.</em></p>")
     html_parts.append("</div>")
@@ -375,6 +424,94 @@ def assemble_digest(news_items_data, feed_tutorials_data, generated_tutorial_md,
     logger.info("HTML Digest assembly complete.")
     return "\n".join(html_parts)
 
+
+# --- Test Code Highlighting Function (For Development Only) ---
+def test_code_highlighting():
+    """Test function to verify the Pygments syntax highlighting is working correctly"""
+    code_snippet = '''
+import os
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated
+import operator
+# Add API key setup
+# os.environ["OPENAI_API_KEY"] = "your_key_here"
+
+def example_function(param1: str, param2: int = 42) -> bool:
+    """Example function with docstring."""
+    if param1 == "test" and param2 > 0:
+        return True
+    return False
+'''
+    lexer = PythonLexer()
+    formatter = HtmlFormatter(style='vs', noclasses=True)
+    highlighted_code = pygments.highlight(code_snippet, lexer, formatter)
+    
+    # Example of how this would be used in the digest
+    html_output = f'''
+<div style="background: #ffffff; border: 1px solid #d4d4d4; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45;">
+{highlighted_code}
+</div>
+'''
+    return html_output
+
+def test_multiple_styles():
+    """Generate examples of different highlighting styles to compare them."""
+    code_snippet = '''
+import os
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated
+import operator
+# Add API key setup
+# os.environ["OPENAI_API_KEY"] = "your_key_here"
+
+def example_function(param1: str, param2: int = 42) -> bool:
+    """Example function with docstring."""
+    if param1 == "test" and param2 > 0:
+        return True
+    return False
+'''
+    lexer = PythonLexer()
+    
+    # Light themes
+    light_styles = ['vs', 'xcode', 'friendly', 'default']
+    # Dark themes
+    dark_styles = ['monokai', 'dracula', 'one-dark', 'nord-darker']
+    
+    results = ['<h2>Light Themes</h2>']
+    
+    # Add light themes
+    for style in light_styles:
+        formatter = HtmlFormatter(style=style, noclasses=True)
+        highlighted_code = pygments.highlight(code_snippet, lexer, formatter)
+        
+        html_output = f'''
+<h3>Style: {style}</h3>
+<div style="background: #ffffff; border: 1px solid #d4d4d4; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45;">
+{highlighted_code}
+</div>
+'''
+        results.append(html_output)
+    
+    # Add dark themes
+    results.append('<h2>Dark Themes</h2>')
+    for style in dark_styles:
+        formatter = HtmlFormatter(style=style, noclasses=True)
+        highlighted_code = pygments.highlight(code_snippet, lexer, formatter)
+        
+        # For dark themes, use dark background
+        html_output = f'''
+<h3>Style: {style}</h3>
+<div style="background: #282c34; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;">
+{highlighted_code}
+</div>
+'''
+        results.append(html_output)
+    
+    with open("syntax_highlighting_comparison.html", "w", encoding="utf-8") as f:
+        f.write("<html><body style='font-family: system-ui, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px;'>" + "".join(results) + "</body></html>")
+    
+    return "Syntax highlighting comparison (light and dark themes) saved to syntax_highlighting_comparison.html"
+
 # --- Example Usage ---
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
@@ -411,86 +548,68 @@ if __name__ == "__main__":
             'move': 'Refactor one of your existing complex agent workflows using LangGraph to see if it simplifies the state logic and improves maintainability.'
         }
     ]
-    # Generated tutorial now expected as MARKDOWN
-    dummy_generated_tutorial_md = """## 🛠️ Skill Up Tutorial: LangGraph Basics
+    # Generated tutorial now expected as HTML
+    dummy_generated_tutorial_html = """<h2>🛠️ Skill Up Tutorial: LangGraph Basics</h2>
 
-**Objective:** Learn to build a simple LangGraph agent.
-**Core Concepts:** Graphs for state, Nodes for functions/LLMs, Edges for control flow.
-**Prerequisites:** `langgraph`, `langchain_openai`
+<p><strong>Objective:</strong> Learn to build a simple LangGraph agent.<br>
+<strong>Core Concepts:</strong> Graphs for state, Nodes for functions/LLMs, Edges for control flow.<br>
+<strong>Prerequisites:</strong> <code>langgraph</code>, <code>langchain_openai</code></p>
 
-**Step-by-Step Implementation:**
-1. **Setup:**
-   ```python
-   import os
-   from langgraph.graph import StateGraph, END
-   from typing import TypedDict, Annotated
-   import operator
-   # Add API key setup
-   # os.environ["OPENAI_API_KEY"] = "your_key_here"
-   ```
-   *Explanation:* Import necessary components.
+<p><strong>Step-by-Step Implementation:</strong></p>
+<ol>
+   <li><strong>Setup:</strong>
+   <pre><code class="language-python">
+import os
+from langgraph.graph import StateGraph, END
+from typing import TypedDict, Annotated
+import operator
+# Add API key setup
+# os.environ["OPENAI_API_KEY"] = "your_key_here"
+   </code></pre>
+   <em>Explanation:</em> Import necessary components.</li>
 
-2. **Define State:**
-   ```python
-   class AgentState(TypedDict):
-       messages: Annotated[list, operator.add]
-   ```
-   *Explanation:* Define the structure to hold messages passed between nodes.
+   <li><strong>Define State:</strong>
+   <pre><code class="language-python">
+class AgentState(TypedDict):
+    messages: Annotated[list, operator.add]
+   </code></pre>
+   <em>Explanation:</em> Define the structure to hold messages passed between nodes.</li>
+</ol>
+    """ # End HTML
 
-3. **Define Nodes:**
-   ```python
-   def call_model(state):
-       # Replace with actual LLM call
-       print("Calling model...")
-       response = "Action: Do something" # Dummy response
-       return {"messages": [response]}
+    # Generate regular light theme digest (default)
+    final_digest_html = assemble_digest(dummy_news_data, dummy_feed_tutorials_data, dummy_generated_tutorial_html, "LangGraph Basics")
 
-   def take_action(state):
-       # Replace with actual action execution
-       print("Taking action...")
-       result = "Action Result: OK"
-       return {"messages": [result]}
-   ```
-   *Explanation:* Define functions representing agent steps (model call, action).
-
-4. **Build Graph:**
-   ```python
-   workflow = StateGraph(AgentState)
-   workflow.add_node("agent", call_model)
-   workflow.add_node("action", take_action)
-   workflow.set_entry_point("agent")
-   # Simple conditional edge (replace with real logic)
-   workflow.add_conditional_edges("agent", lambda x: "action" if "Action: " in x['messages'][-1] else END)
-   workflow.add_edge("action", END)
-   app = workflow.compile()
-   ```
-   *Explanation:* Construct the graph, defining nodes and transitions.
-
-5. **Running the Example:**
-   ```python
-   if __name__ == "__main__":
-       inputs = {"messages": ["User query"]}
-       for output in app.stream(inputs):
-           for key, value in output.items():
-               print(f"Output from node '{key}': {value}")
-   ```
-
-**Key Considerations:** Error handling within nodes is crucial.
-**Next Steps / Further Learning:** [LangGraph Docs](https://langchain.dev/docs/langgraph)
-    """ # End Markdown
-
-    final_digest_html = assemble_digest(dummy_news_data, dummy_feed_tutorials_data, dummy_generated_tutorial_md, "LangGraph Basics")
-
-    print("\n--- Assembled HTML Digest --- ")
-    # print(final_digest_html) # Avoid printing very long string to console
-
-    # Save to a file for inspection
+    print("\n--- Assembled Light Theme HTML Digest --- ")
+    # Save the light theme version 
     try:
-        with open("digest_preview.html", "w", encoding="utf-8") as f:
+        with open("digest_preview_light.html", "w", encoding="utf-8") as f:
             f.write(final_digest_html)
-        print("\nHTML Digest saved to digest_preview.html")
+        print("\nLight theme HTML Digest saved to digest_preview_light.html")
     except Exception as e:
-        print(f"\nError saving HTML digest preview: {e}")
+        print(f"\nError saving light theme HTML digest preview: {e}")
+    
+    # Generate a dark theme version - for example with 'one-dark' theme
+    dark_theme_digest_html = assemble_digest(
+        dummy_news_data, 
+        dummy_feed_tutorials_data, 
+        dummy_generated_tutorial_html, 
+        "LangGraph Basics", 
+        code_theme='one-dark',
+        dark_code=True
+    )
+
+    print("\n--- Assembled Dark Theme HTML Digest --- ")
+    # Save the dark theme version
+    try:
+        with open("digest_preview_dark.html", "w", encoding="utf-8") as f:
+            f.write(dark_theme_digest_html)
+        print("\nDark theme HTML Digest saved to digest_preview_dark.html")
+    except Exception as e:
+        print(f"\nError saving dark theme HTML digest preview: {e}")
+    
+    # Generate a comparison of all available code styles
+    print(test_multiple_styles())
 
 # Removed old Markdown helper functions as they are replaced by HTML parsing
 # def extract_section(markdown_text, section_title): ...

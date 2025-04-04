@@ -27,5 +27,3 @@
 - **Tech:** Python, FastAPI, Transformer models (e.g., PEGASUS, BART via Hugging Face).
 - **Data:** External web articles, user-submitted text.
 - **Current Stage:** Basic summarization working. Need to improve handling of very long documents and potentially add abstractive capabilities. Interested in evaluating newer summarization-focused models.
-
-*(Please replace this placeholder content with details about your actual projects)* 

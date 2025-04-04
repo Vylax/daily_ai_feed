@@ -69,7 +69,7 @@ TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent("""
 
 # Modified signature to accept config
 def generate_tutorial(topic, config):
-    """Generates a Markdown tutorial for the given topic using the configured Gemini model."""
+    """Generates an HTML tutorial for the given topic using the configured Gemini model."""
     if not topic:
         logger.error("No topic provided for tutorial generation.")
         return None
@@ -95,10 +95,10 @@ def generate_tutorial(topic, config):
         logger.error(f"Gemini call for tutorial generation on '{topic}' failed or returned empty response.")
         return None
 
-    tutorial_markdown = response.text
+    tutorial_html = response.text
     logger.info(f"Successfully generated tutorial for topic: {topic}")
-    # logger.debug(f"Generated tutorial Markdown (start):\n{tutorial_markdown[:500]}...")
-    return tutorial_markdown
+    # logger.debug(f"Generated tutorial HTML (start):\n{tutorial_html[:500]}...")
+    return tutorial_html
 
 # --- Example Usage (for testing) ---
 if __name__ == '__main__':
@@ -150,10 +150,10 @@ if __name__ == '__main__':
 
     if selected_topic:
         # Pass config to the function
-        generated_markdown = generate_tutorial(selected_topic, config)
-        if generated_markdown:
+        generated_html = generate_tutorial(selected_topic, config)
+        if generated_html:
             print(f"\n--- Generated Tutorial for: {selected_topic} ---")
-            print(generated_markdown)
+            print(generated_html)
 
             # Test selection rotation
             print("\n--- Selecting next topic ---")

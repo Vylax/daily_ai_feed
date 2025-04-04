@@ -45,43 +45,49 @@ def load_config():
         config['initial_tutorial_topics'] = [] # Default to empty list
 
     # --- Email Configuration ---
-    config['email_provider'] = os.getenv('EMAIL_PROVIDER', 'smtp').lower().strip()
-    config['recipient_email'] = os.getenv('RECIPIENT_EMAIL')
-    config['sender_email'] = os.getenv('SENDER_EMAIL')
-    config['email_subject_prefix'] = os.getenv('EMAIL_SUBJECT_PREFIX', '[AI Digest]')
+    email_config = {
+        'enabled': True,  # Default to enabled
+        'email_provider': os.getenv('EMAIL_PROVIDER', 'smtp').lower().strip(),
+        'recipient_email': os.getenv('RECIPIENT_EMAIL'),
+        'sender_email': os.getenv('SENDER_EMAIL'),
+        'email_subject_prefix': os.getenv('EMAIL_SUBJECT_PREFIX', '[AI Digest]')
+    }
 
-    if not config['recipient_email'] or not config['sender_email']:
+    if not email_config['recipient_email'] or not email_config['sender_email']:
         logger.warning("Recipient or Sender email not configured in .env. Email delivery will fail.")
 
-    if config['email_provider'] == 'smtp':
-        config['smtp_server'] = os.getenv('SMTP_SERVER')
+    if email_config['email_provider'] == 'smtp':
+        email_config['smtp_server'] = os.getenv('SMTP_SERVER')
         try:
-            config['smtp_port'] = int(os.getenv('SMTP_PORT', 587))
+            email_config['smtp_port'] = int(os.getenv('SMTP_PORT', 587))
         except (ValueError, TypeError):
             logger.warning("Invalid SMTP_PORT in .env, using default 587")
-            config['smtp_port'] = 587
+            email_config['smtp_port'] = 587
             
-        config['smtp_username'] = os.getenv('SMTP_USERNAME', config.get('sender_email'))
-        config['smtp_password'] = os.getenv('SMTP_PASSWORD')
+        email_config['smtp_username'] = os.getenv('SMTP_USERNAME', email_config.get('sender_email'))
+        email_config['smtp_password'] = os.getenv('SMTP_PASSWORD')
         
         # Log the SMTP configuration for debugging (without revealing password)
-        logger.debug(f"SMTP Configuration loaded: Server={config.get('smtp_server')}, "
-                    f"Port={config.get('smtp_port')}, Username={config.get('smtp_username')}")
+        logger.debug(f"SMTP Configuration loaded: Server={email_config.get('smtp_server')}, "
+                    f"Port={email_config.get('smtp_port')}, Username={email_config.get('smtp_username')}")
         
-        if not all([config['smtp_server'], config['smtp_port'], config['smtp_password']]):
+        if not all([email_config['smtp_server'], email_config['smtp_port'], email_config['smtp_password']]):
             logger.error("SMTP configuration is incomplete in .env file. Please check your .env file and ensure "
                       "SMTP_SERVER, SMTP_PORT, and SMTP_PASSWORD are set correctly. "
                       "Email functionality will not work without these values.")
                 
-    elif config['email_provider'] == 'sendgrid':
-        config['sendgrid_api_key'] = os.getenv('SENDGRID_API_KEY')
-        if not config['sendgrid_api_key']:
+    elif email_config['email_provider'] == 'sendgrid':
+        email_config['sendgrid_api_key'] = os.getenv('SENDGRID_API_KEY')
+        if not email_config['sendgrid_api_key']:
             logger.error("SendGrid API Key not found in .env. Please set SENDGRID_API_KEY in your .env file.")
     else:
-        logger.error(f"Unsupported email provider: '{config['email_provider']}'. Please set EMAIL_PROVIDER=smtp "
+        logger.error(f"Unsupported email provider: '{email_config['email_provider']}'. Please set EMAIL_PROVIDER=smtp "
                   f"or EMAIL_PROVIDER=sendgrid in your .env file. Defaulting to 'smtp', but email functionality "
                   f"will not work correctly without proper configuration.")
-        config['email_provider'] = 'smtp'
+        email_config['email_provider'] = 'smtp'
+
+    # Add the email config to the main config
+    config['email_config'] = email_config
 
     return config
 
