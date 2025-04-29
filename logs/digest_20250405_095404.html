@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>AI Daily Digest - April 05, 2025</title>
+<style>
+        body { font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f8f9fa; color: #24292e; } /* Updated base color */
+        .container { width: 95%; max-width: 800px; margin: 20px auto; background-color: #ffffff; border: 1px solid #dfe2e5; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.05); } /* Adjusted border/shadow */
+        .header { background-color: #0366d6; color: #ffffff; padding: 25px 30px; text-align: center; border-bottom: 5px solid #005cc5; } /* GitHub blue */
+        .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+        .header p { margin: 5px 0 0; font-size: 16px; font-style: italic; opacity: 0.9; }
+        .overview { background-color: #f6f8fa; padding: 15px 25px; margin: 25px; border-left: 4px solid #0366d6; border-radius: 4px; } /* Lighter blue */
+        .overview h3 { margin-top: 0; margin-bottom: 10px; color: #005cc5; font-size: 18px; }
+        .overview ul { margin: 0; padding-left: 20px; }
+        .overview li { margin-bottom: 5px; }
+        .section { padding: 20px 30px; border-bottom: 1px solid #eaecef; } /* Lighter border */
+        .section:last-child { border-bottom: none; }
+        .section h2 { background-color: #f6f8fa; padding: 12px 20px; margin: -20px -30px 20px -30px; font-size: 20px; font-weight: 600; color: #24292e; border-bottom: 1px solid #eaecef; display: flex; align-items: center; } /* Lighter header */
+        .section h2 img.google-icon { margin-right: 8px; }
+        .item { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 1px dashed #d1d5da; } /* Slightly darker dashed border */
+        .item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+        .item h3 { margin-top: 0; margin-bottom: 5px; font-size: 18px; color: #0366d6; font-weight: 600; } /* GitHub blue link color */
+        .item p { margin-top: 5px; margin-bottom: 12px; font-size: 15px; color: #24292e; }
+        .item p strong { color: #24292e; font-weight: 600; }
+        .item a { color: #0366d6; text-decoration: none; }
+        .item a:hover { text-decoration: underline; }
+        .source-link { font-size: 0.9em; color: #586069; margin-top: -8px !important; margin-bottom: 15px !important; word-break: break-all; } /* GitHub secondary text color */
+        .google-icon { width: 16px; height: 16px; vertical-align: middle; }
+        .actionable-ideas-list ul { list-style-type: disc; padding-left: 20px; margin-top: 10px;}
+        .actionable-ideas-list li { background-color: transparent; margin-bottom: 10px; padding: 0; border-left: none; border-radius: 0px; }
+        .actionable-ideas-list li em { color: #586069; font-size: 0.9em; display: block; margin-top: 4px;}
+        .market-pulse-list ul { list-style-type: disc; padding-left: 20px; }
+        .market-pulse-list li { margin-bottom: 8px; }
+        .market-pulse-list li .source-title { color: #586069; font-size: 0.9em; display: block; margin-top: 2px;} /* C.7 */
+        .footer { text-align: center; padding: 20px; font-size: 12px; color: #586069; background-color: #f6f8fa; border-top: 1px solid #eaecef; }
+
+        /* Styles for code blocks - aiming for VS Code Light+ look (GitHub inspired) */
+        .codehilite { background: #f6f8fa; border: 1px solid #dfe2e5; padding: 12px 15px; border-radius: 6px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; }
+        .codehilite pre { margin: 0; padding: 0; background: transparent; border: none; font-family: inherit; font-size: inherit; white-space: pre; word-wrap: normal; } /* Ensure pre doesn't add extra styles */
+        /* Pygments Classes - Based on GitHub Light theme */
+        .codehilite .hll { background-color: #fffbdd; } /* Highlighted line */
+        .codehilite .c { color: #6a737d; font-style: italic; } /* Comment */
+        .codehilite .c1 { color: #6a737d; font-style: italic; } /* Comment.Single */
+        .codehilite .cs { color: #6a737d; font-style: italic; } /* Comment.Special */
+        .codehilite .k { color: #d73a49; } /* Keyword */
+        .codehilite .kc { color: #d73a49; } /* Keyword.Constant */
+        .codehilite .kd { color: #d73a49; } /* Keyword.Declaration */
+        .codehilite .kn { color: #d73a49; } /* Keyword.Namespace */
+        .codehilite .kp { color: #d73a49; } /* Keyword.Pseudo */
+        .codehilite .kr { color: #d73a49; } /* Keyword.Reserved */
+        .codehilite .kt { color: #d73a49; } /* Keyword.Type */
+        .codehilite .m { color: #005cc5; } /* Literal.Number */
+        .codehilite .mf { color: #005cc5; } /* Literal.Number.Float */
+        .codehilite .mh { color: #005cc5; } /* Literal.Number.Hex */
+        .codehilite .mi { color: #005cc5; } /* Literal.Number.Integer */
+        .codehilite .mo { color: #005cc5; } /* Literal.Number.Oct */
+        .codehilite .s { color: #032f62; } /* Literal.String */
+        .codehilite .sa { color: #032f62; } /* Literal.String.Affix */
+        .codehilite .sb { color: #032f62; } /* Literal.String.Backtick */
+        .codehilite .sc { color: #032f62; } /* Literal.String.Char */
+        .codehilite .dl { color: #032f62; } /* Literal.String.Delimiter */
+        .codehilite .sd { color: #032f62; font-style: italic; } /* Literal.String.Doc */
+        .codehilite .s2 { color: #032f62; } /* Literal.String.Double */
+        .codehilite .se { color: #005cc5; } /* Literal.String.Escape */
+        .codehilite .sh { color: #032f62; } /* Literal.String.Heredoc */
+        .codehilite .si { color: #032f62; } /* Literal.String.Interpol */
+        .codehilite .sx { color: #032f62; } /* Literal.String.Other */
+        .codehilite .sr { color: #032f62; } /* Literal.String.Regex */
+        .codehilite .s1 { color: #032f62; } /* Literal.String.Single */
+        .codehilite .ss { color: #032f62; } /* Literal.String.Symbol */
+        .codehilite .na { color: #005cc5; } /* Name.Attribute */
+        .codehilite .nb { color: #005cc5; } /* Name.Builtin */
+        .codehilite .nc { color: #6f42c1; } /* Name.Class */
+        .codehilite .no { color: #005cc5; } /* Name.Constant */
+        .codehilite .nd { color: #6f42c1; } /* Name.Decorator */
+        .codehilite .ni { color: #005cc5; } /* Name.Entity */
+        .codehilite .ne { color: #d73a49; font-weight: bold; } /* Name.Exception */
+        .codehilite .nf { color: #6f42c1; } /* Name.Function */
+        .codehilite .nl { color: #d73a49; } /* Name.Label */
+        .codehilite .nn { color: #6f42c1; } /* Name.Namespace */
+        .codehilite .nt { color: #22863a; } /* Name.Tag */
+        .codehilite .nv { color: #e36209; } /* Name.Variable */
+        .codehilite .ow { color: #d73a49; font-weight: bold; } /* Operator.Word */
+        .codehilite .w { color: #bbbbbb; } /* Text.Whitespace */
+        .codehilite .bp { color: #005cc5; } /* Name.Builtin.Pseudo */
+        .codehilite .fm { color: #6f42c1; } /* Name.Function.Magic */
+        .codehilite .py { color: #24292e; } /* Name */
+        .codehilite .vc { color: #e36209; } /* Name.Variable.Class */
+        .codehilite .vg { color: #e36209; } /* Name.Variable.Global */
+        .codehilite .vi { color: #e36209; } /* Name.Variable.Instance */
+        .codehilite .vm { color: #6f42c1; } /* Name.Variable.Magic */
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🚀 AI Daily Digest</h1>
+<p>April 05, 2025</p>
+</div>
+<div class="overview">
+<h3>Today's Highlights:</h3>
+<ul>
+<li>Analysis of <strong>7 key AI developments</strong>.</li>
+<li>Skill up tutorial on: <strong>LangGraph basics</strong>.</li>
+</ul>
+<p style="font-size: 0.9em; margin-top: 15px;">Jump to: 
+<a href="#headlines">Headlines</a> | <a href="#tutorial">Tutorial</a> | <a href="#guides">Guides</a> | <a href="#spotlight">Google Spotlight</a> | <a href="#market">Market</a> | <a href="#actions">Actionable Ideas</a>
+</p>
+</div>
+<div class="section">
+<h2 id="headlines">📰 Top Headlines & Insights</h2>
+<div class='item'>
+<h3>Gemini 2.5 Pro is Google’s most expensive AI model yet</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/gemini-2-5-pro-is-googles-most-expensive-ai-model-yet/" target="_blank">https://techcrunch.com/2025/04/04/gemini-2-5-pro-is-googles-most-expensive-ai-model-yet/</a></p>
+<p><strong>Summary:</strong> Google has launched Gemini 2.5 Pro, its most expensive AI model to date. The article focuses on the pricing strategy and features of this new model, with the CTO discussing its capabilities. This launch suggests Google is investing heavily in advanced AI, potentially targeting a premium market segment. The details are being closely watched within the tech community.</p>
+</div>
+<div class='item'>
+<h3>Gemini 2.5 Pro is now available without limits and for cheaper than Claude, GPT-4o</h3>
+<p class='source-link'><a href="https://venturebeat.com/ai/gemini-2-5-pro-is-now-available-without-limits-and-for-cheaper-than-claude-gpt-4o/" target="_blank">https://venturebeat.com/ai/gemini-2-5-pro-is-now-available-without-limits-and-for-cheaper-than-claude-gpt-4o/</a></p>
+<p><strong>Summary:</strong> Google has released Gemini 1.5 Pro, its newest AI model, making it available without usage limits. The company is also undercutting the pricing of rival models like Claude and GPT-4o. This strategic move aims to increase accessibility and competitiveness in the AI market. Ultimately, the availability of Gemini 1.5 Pro and the cost-effectiveness suggest an aggressive push by Google to attract users and establish a stronger foothold in the AI landscape.</p>
+</div>
+<div class='item'>
+<h3>Evaluating progress of LLMs on scientific problem-solving</h3>
+<p class='source-link'><a href="https://research.google/blog/evaluating-progress-of-llms-on-scientific-problem-solving/" target="_blank">https://research.google/blog/evaluating-progress-of-llms-on-scientific-problem-solving/</a></p>
+<p><strong>Summary:</strong> Google is assessing the advancement of large language models (LLMs) in tackling scientific problem-solving. This research focuses on how well LLMs can handle complex, real-world scientific challenges. The findings will help determine the effectiveness of these models in a practical scientific context, measuring their progress. This research is highly relevant to understanding the capabilities and limitations of current LLMs in a specialized field.</p>
+</div>
+<div class='item'>
+<h3>GitHub Copilot introduces new limits, charges for ‘premium’ AI models</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/github-copilot-introduces-new-limits-charges-for-premium-ai-models/" target="_blank">https://techcrunch.com/2025/04/04/github-copilot-introduces-new-limits-charges-for-premium-ai-models/</a></p>
+<p><strong>Summary:</strong> GitHub Copilot, the AI-powered coding assistant, is implementing new restrictions and introducing paid tiers. This update means users will face limits on the free version and need to subscribe for access to advanced AI models. The changes are likely driven by the increasing costs of running complex AI systems. This shift could impact developers by potentially limiting access and increasing the overall cost of their coding workflows.</p>
+</div>
+<div class='item'>
+<h3>ChatGPT adoption skyrockets in India, but monetization may be trailing</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/chatgpt-adoption-skyrockets-in-india-but-monetization-may-be-trailing/" target="_blank">https://techcrunch.com/2025/04/04/chatgpt-adoption-skyrockets-in-india-but-monetization-may-be-trailing/</a></p>
+<p><strong>Summary:</strong> ChatGPT use is rapidly increasing in India, indicating strong user adoption of the AI chatbot. Despite this surge in popularity, the article suggests that monetization efforts in the Indian market are potentially lagging behind the adoption rate. The core issue appears to be the disparity between user growth and the strategies for generating revenue from ChatGPT in India.</p>
+</div>
+<div class='item'>
+<h3>OpenAI’s models ‘memorized’ copyrighted content, new study suggests</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/openais-models-memorized-copyrighted-content-new-study-suggests/" target="_blank">https://techcrunch.com/2025/04/04/openais-models-memorized-copyrighted-content-new-study-suggests/</a></p>
+<p><strong>Summary:</strong> A new study indicates that OpenAI&#x27;s large language models may have memorized copyrighted content. This suggests that the models didn&#x27;t just learn patterns but directly retained copyrighted material used during training. This finding highlights potential limitations in how LLMs function and could raise legal concerns regarding copyright infringement.</p>
+</div>
+<div class='item'>
+<h3>Microsoft’s Copilot can now browse the web and perform actions for you</h3>
+<p class='source-link'><a href="https://techcrunch.com/2025/04/04/microsofts-copilot-can-now-browse-the-web-and-perform-actions-for-you/" target="_blank">https://techcrunch.com/2025/04/04/microsofts-copilot-can-now-browse-the-web-and-perform-actions-for-you/</a></p>
+<p><strong>Summary:</strong> Microsoft&#x27;s Copilot has been enhanced with the ability to browse the web and take actions on behalf of users. This means Copilot can now gather information from the internet and complete tasks, going beyond its previous capabilities. This upgrade positions Copilot as a more powerful and versatile AI assistant, directly competing with similar offerings. The update includes performance features.</p>
+</div>
+</div>
+<div class="section">
+<h2 id="tutorial">🧑‍🏫 Skill Up: Custom Tutorial - LangGraph basics</h2>
+<p>This tutorial provides a crash course in LangGraph, focusing on building a simple conversational agent. We'll construct a graph with distinct states and transitions, enabling more complex logic than basic LLM chains.</p>
+
+<h3>Objective: Create a Basic LangGraph-Powered Agent</h3>
+
+<p>We'll build an agent that either responds to a user or decides to rewrite the query based on a simple check.  This demonstrates the core state management and conditional transitions that LangGraph enables.</p>
+
+<h3>Step 1: Install Dependencies</h3>
+
+<p>First, install necessary packages. Assume you have Python 3.8+.</p>
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #F8F8F2">pip</span> <span style="color: #F8F8F2">install</span> <span style="color: #F8F8F2">langchain</span> <span style="color: #F8F8F2">langchain</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">google</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">vertexai</span> <span style="color: #F8F8F2">langgraph</span> <span style="color: #F8F8F2">typing</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">extensions</span> <span style="color: #F8F8F2">beautifulsoup4</span> <span style="color: #F8F8F2">google</span><span style="color: #FF4689">-</span><span style="color: #F8F8F2">generativeai</span>
+</div>
+</code></pre></div>
+
+<h3>Step 2: Set up your environment</h3>
+<p>You'll need a Google Cloud project and Vertex AI enabled.  Set your API key in the environment:</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">import</span><span style="color: #F8F8F2"> os</span>
+
+<span style="color: #F8F8F2">os</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">environ[</span><span style="color: #E6DB74">&quot;GOOGLE_PROJECT&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #FF4689">=</span> <span style="color: #E6DB74">&quot;your-gcp-project-id&quot;</span> <span style="color: #959077"># Replace with your GCP project ID</span>
+<span style="color: #F8F8F2">os</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">environ[</span><span style="color: #E6DB74">&quot;GOOGLE_API_KEY&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #FF4689">=</span> <span style="color: #E6DB74">&quot;your-google-api-key&quot;</span> <span style="color: #959077"># Replace with your API Key</span>
+<span style="color: #F8F8F2">os</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">environ[</span><span style="color: #E6DB74">&quot;GOOGLE_REGION&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #FF4689">=</span> <span style="color: #E6DB74">&quot;us-central1&quot;</span>  <span style="color: #959077"># Replace with your region</span>
+</div>
+</code></pre></div>
+
+<h3>Step 3: Define the States</h3>
+
+<p>LangGraph revolves around states. We'll define two states: `user_input` and `llm_response`. We'll also need a node to check if the query needs a rewrite.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">from</span><span style="color: #F8F8F2"> typing </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">TypedDict,</span> <span style="color: #F8F8F2">Annotated,</span> <span style="color: #F8F8F2">Sequence</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.messages </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">BaseMessage</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.prompts </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">ChatPromptTemplate,</span> <span style="color: #F8F8F2">MessagesPlaceholder</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.runnables </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">chain</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_google_vertexai </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">ChatVertexAI</span>
+<span style="color: #FF4689">import</span><span style="color: #F8F8F2"> langgraph.prebuilt </span><span style="color: #66D9EF">as</span><span style="color: #F8F8F2"> prebuilt</span>
+<span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langgraph.graph </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">StateGraph,</span> <span style="color: #F8F8F2">END</span>
+<span style="color: #FF4689">import</span><span style="color: #F8F8F2"> typing</span>
+
+<span style="color: #66D9EF">class</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">GraphState</span><span style="color: #F8F8F2">(TypedDict):</span>
+<span style="color: #F8F8F2">    </span><span style="color: #E6DB74">&quot;&quot;&quot;</span>
+<span style="color: #E6DB74">    Represents the state of our graph.</span>
+
+<span style="color: #E6DB74">    Attributes:</span>
+<span style="color: #E6DB74">        messages: A list of messages representing the conversation history.</span>
+<span style="color: #E6DB74">        rewrite_query: Boolean flag to determine if query needs rewriting.</span>
+<span style="color: #E6DB74">    &quot;&quot;&quot;</span>
+    <span style="color: #F8F8F2">messages:</span> <span style="color: #F8F8F2">typing</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">List[BaseMessage]</span>
+    <span style="color: #F8F8F2">rewrite_query:</span> <span style="color: #F8F8F2">bool</span>
+</div>
+</code></pre></div>
+
+<h3>Step 4: Define the Nodes</h3>
+
+<p>Nodes perform actions and potentially modify the state. We'll create three nodes:</p>
+<ul>
+    <li><strong>`get_llm_response`</strong>:  Generates a response from the LLM.</li>
+    <li><strong>`rewrite_check`</strong>: Checks if a user query is vague and needs to be rewritten.</li>
+    <li><strong>`user_message`</strong>: Appends user input to the message list.</li>
+</ul>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #F8F8F2">llm</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">ChatVertexAI(model_name</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;gemini-1.5-pro&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">temperature</span><span style="color: #FF4689">=</span><span style="color: #AE81FF">0.7</span><span style="color: #F8F8F2">)</span>
+
+<span style="color: #F8F8F2">prompt</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">ChatPromptTemplate</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">from_messages([</span>
+    <span style="color: #F8F8F2">(</span><span style="color: #E6DB74">&quot;system&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #E6DB74">&quot;You are a helpful assistant. Answer questions based on the user&#39;s query.&quot;</span><span style="color: #F8F8F2">),</span>
+    <span style="color: #F8F8F2">MessagesPlaceholder(variable_name</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">)</span>
+<span style="color: #F8F8F2">])</span>
+
+<span style="color: #F8F8F2">get_llm_response</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">prompt</span> <span style="color: #FF4689">|</span> <span style="color: #F8F8F2">llm</span>
+
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">rewrite_check</span><span style="color: #F8F8F2">(state:</span> <span style="color: #F8F8F2">GraphState):</span>
+<span style="color: #F8F8F2">    </span><span style="color: #E6DB74">&quot;&quot;&quot;</span>
+<span style="color: #E6DB74">    Checks if a user query needs rewriting based on its vagueness.</span>
+<span style="color: #E6DB74">    For simplicity, we&#39;ll just return True if the query contains the word &#39;vague&#39;.</span>
+<span style="color: #E6DB74">    &quot;&quot;&quot;</span>
+    <span style="color: #F8F8F2">messages</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">state[</span><span style="color: #E6DB74">&#39;messages&#39;</span><span style="color: #F8F8F2">]</span>
+    <span style="color: #F8F8F2">last_message</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">messages[</span><span style="color: #FF4689">-</span><span style="color: #AE81FF">1</span><span style="color: #F8F8F2">]</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">content</span> <span style="color: #66D9EF">if</span> <span style="color: #F8F8F2">messages</span> <span style="color: #66D9EF">else</span> <span style="color: #E6DB74">&quot;&quot;</span>
+    <span style="color: #66D9EF">return</span> <span style="color: #F8F8F2">{</span><span style="color: #E6DB74">&quot;rewrite_query&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #E6DB74">&quot;vague&quot;</span> <span style="color: #FF4689">in</span> <span style="color: #F8F8F2">last_message</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">lower()}</span>
+
+<span style="color: #66D9EF">def</span><span style="color: #F8F8F2"> </span><span style="color: #A6E22E">user_message</span><span style="color: #F8F8F2">(state,</span> <span style="color: #F8F8F2">x):</span>
+  <span style="color: #66D9EF">return</span> <span style="color: #F8F8F2">{</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">state[</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #FF4689">+</span> <span style="color: #F8F8F2">[x[</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">]]}</span>
+</div>
+</code></pre></div>
+
+<h3>Step 5: Define the Graph</h3>
+
+<p>This is where we define the connections between the nodes and the conditions that determine transitions.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #F8F8F2">builder</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">StateGraph(GraphState)</span>
+
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">user_message)</span>
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;llm_response&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">get_llm_response)</span>
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_node(</span><span style="color: #E6DB74">&quot;rewrite_check&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">rewrite_check)</span>
+
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">set_entry_point(</span><span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">)</span>
+
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_edge(</span><span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #E6DB74">&quot;rewrite_check&quot;</span><span style="color: #F8F8F2">)</span>
+
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_conditional_edges(</span>
+    <span style="color: #E6DB74">&quot;rewrite_check&quot;</span><span style="color: #F8F8F2">,</span>
+    <span style="color: #66D9EF">lambda</span> <span style="color: #F8F8F2">x:</span> <span style="color: #E6DB74">&quot;llm_response&quot;</span> <span style="color: #66D9EF">if</span> <span style="color: #FF4689">not</span> <span style="color: #F8F8F2">x[</span><span style="color: #E6DB74">&quot;rewrite_query&quot;</span><span style="color: #F8F8F2">]</span> <span style="color: #66D9EF">else</span> <span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">,</span>
+    <span style="color: #F8F8F2">{</span>
+        <span style="color: #E6DB74">&quot;llm_response&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #E6DB74">&quot;llm_response&quot;</span><span style="color: #F8F8F2">,</span>
+        <span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #E6DB74">&quot;user_message&quot;</span><span style="color: #F8F8F2">,</span>
+    <span style="color: #F8F8F2">},</span>
+<span style="color: #F8F8F2">)</span>
+
+<span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">add_edge(</span><span style="color: #E6DB74">&quot;llm_response&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">END)</span>
+
+<span style="color: #F8F8F2">graph</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">builder</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">compile()</span>
+</div>
+</code></pre></div>
+
+<h3>Step 6: Run the Graph</h3>
+
+<p>Now, let's run the graph with a sample query.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #FF4689">from</span><span style="color: #F8F8F2"> langchain_core.messages </span><span style="color: #FF4689">import</span> <span style="color: #F8F8F2">HumanMessage</span>
+
+<span style="color: #F8F8F2">inputs1</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">{</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">HumanMessage(content</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;What is the weather like?&quot;</span><span style="color: #F8F8F2">)}</span>
+<span style="color: #F8F8F2">inputs2</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">{</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">HumanMessage(content</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;That question was a bit vague, please be more specific&quot;</span><span style="color: #F8F8F2">)}</span>
+
+<span style="color: #F8F8F2">result1</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">graph</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke(inputs1)</span>
+<span style="color: #F8F8F2">result2</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">graph</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke(inputs2)</span>
+
+<span style="color: #F8F8F2">print(</span><span style="color: #E6DB74">&quot;Result 1:&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">result1)</span>
+<span style="color: #F8F8F2">print(</span><span style="color: #E6DB74">&quot;Result 2:&quot;</span><span style="color: #F8F8F2">,</span> <span style="color: #F8F8F2">result2)</span>
+</div>
+</code></pre></div>
+
+<h3>Step 7: Run the Graph as a Chain</h3>
+
+<p>LangGraph also supports a simple chain api.</p>
+
+<div style="background: #272822; border: 1px solid #181a1f; padding: 12px 15px; border-radius: 3px; overflow-x: auto; font-family: Consolas, 'SFMono-Regular', 'Liberation Mono', Menlo, monospace; font-size: 14px; margin: 1em 0; line-height: 1.45; color: #abb2bf;"><pre style="margin: 0; line-height: 125%; background: transparent; border: none;"><code class="language-python"><div class="highlight" style="background: #272822"><span></span><span style="color: #F8F8F2">chain</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">graph</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">as_runnable()</span>
+<span style="color: #F8F8F2">result</span> <span style="color: #FF4689">=</span> <span style="color: #F8F8F2">chain</span><span style="color: #FF4689">.</span><span style="color: #F8F8F2">invoke({</span><span style="color: #E6DB74">&quot;messages&quot;</span><span style="color: #F8F8F2">:</span> <span style="color: #F8F8F2">HumanMessage(content</span><span style="color: #FF4689">=</span><span style="color: #E6DB74">&quot;Tell me about the history of the world.&quot;</span><span style="color: #F8F8F2">)})</span>
+<span style="color: #F8F8F2">print(result)</span>
+</div>
+</code></pre></div>
+
+<h3>Real-World Considerations</h3>
+
+<ul>
+    <li><strong>API Keys:</strong> Protect your API keys and use secure storage (e.g., environment variables, Google Cloud Secret Manager).</li>
+    <li><strong>Error Handling:</strong> Implement robust error handling within the nodes to gracefully handle unexpected LLM responses or API failures.</li>
+    <li><strong>Rate Limiting:</strong> Be mindful of API rate limits and implement appropriate retry mechanisms or queuing strategies.</li>
+    <li><strong>Logging and Monitoring:</strong> Log inputs, outputs, and execution times for each node to facilitate debugging and performance monitoring. Google Cloud Logging is a good option.</li>
+    <li><strong>State Management:</strong> In more complex applications, consider using a persistent store (e.g., Cloud Datastore) to maintain the graph state across multiple interactions.</li>
+</ul>
+
+<h3>Further Exploration</h3>
+
+<ul>
+    <li>LangGraph's documentation:  <a href="https://python.langchain.com/docs/langgraph">https://python.langchain.com/docs/langgraph</a></li>
+    <li>Explore integrations with other Langchain components like memory modules.</li>
+    <li>Consider the prebuilt agents and tools available in `langgraph.prebuilt`.</li>
+</ul>
+
+</div>
+<div class="section">
+<h2 id="guides">⚙️ Guides & Tutorials From Your Feeds</h2>
+<div class='item'>
+<h3>Creating an AI Agent to Write Blog Posts with CrewAI</h3>
+<p class='source-link'><a href="https://towardsdatascience.com/creating-an-ai-agent-to-write-blog-posts-with-crewai/" target="_blank">https://towardsdatascience.com/creating-an-ai-agent-to-write-blog-posts-with-crewai/</a></p>
+<p><strong>Summary:</strong> This article explores the use of CrewAI to build an AI agent capable of writing blog posts. It demonstrates a practical application of AI agents by showing how to set up such an agent. The focus is on utilizing the CrewAI framework, which likely streamlines the process of orchestrating multiple AI agents. The main takeaway is a guide to using AI agents for automated content creation, potentially enabling more efficient and scalable blog writing.</p>
+</div>
+<div class='item'>
+<h3>A Comprehensive Guide to RAG Developer Stack</h3>
+<p class='source-link'><a href="https://www.analyticsvidhya.com/blog/2025/04/rag-developer-stack/" target="_blank">https://www.analyticsvidhya.com/blog/2025/04/rag-developer-stack/</a></p>
+<p><strong>Summary:</strong> This blog post offers a comprehensive guide to the Retrieval-Augmented Generation (RAG) developer stack. RAG is a crucial technique for applying Large Language Models (LLMs) in real-world scenarios. The guide likely covers the components and tools involved in building RAG systems, helping developers build more effective AI applications. Understanding the RAG developer stack is therefore essential for anyone working with LLMs.</p>
+</div>
+<div class='item'>
+<h3>5 Affordable Cloud Platforms for Fine-tuning LLMs</h3>
+<p class='source-link'><a href="https://www.analyticsvidhya.com/blog/2025/04/cloud-platforms-for-fine-tuning-llms/" target="_blank">https://www.analyticsvidhya.com/blog/2025/04/cloud-platforms-for-fine-tuning-llms/</a></p>
+<p><strong>Summary:</strong> This article highlights five affordable cloud platforms suitable for fine-tuning large language models (LLMs). It&#x27;s a practical guide focused on helping CTOs and others address cost constraints associated with LLM development. The key takeaway is a curated list of accessible cloud solutions that enable fine-tuning, making LLM implementation more budget-friendly. This helps bridge the gap between the potential of LLMs and the financial realities of deploying them.</p>
+</div>
+</div>
+<div class="section">
+<h2 id="spotlight"><img src="https://www.google.com/favicon.ico" class="google-icon" alt="G"> Google Spotlight</h2>
+<ul>
+<li><a href="https://techcrunch.com/2025/04/04/gemini-2-5-pro-is-googles-most-expensive-ai-model-yet/" target="_blank">📰 Gemini 2.5 Pro is Google’s most expensive AI model yet</a></li>
+<li><a href="https://venturebeat.com/ai/gemini-2-5-pro-is-now-available-without-limits-and-for-cheaper-than-claude-gpt-4o/" target="_blank">📰 Gemini 2.5 Pro is now available without limits and for cheaper than Claude, GPT-4o</a></li>
+<li><a href="https://research.google/blog/evaluating-progress-of-llms-on-scientific-problem-solving/" target="_blank">📰 Evaluating progress of LLMs on scientific problem-solving</a></li>
+</ul>
+</div>
+<div class="section market-pulse-list">
+<h2 id="market">📈 Market Pulse</h2>
+<p><em>Key market shifts and competitive observations today include:</em></p>
+<p><em>No specific market analysis points identified in today's items.</em></p>
+</div>
+<div class="section actionable-ideas-list">
+<h2 id="actions">⚡ Actionable Ideas & Questions</h2>
+<p><em>No specific project applications identified in today's items based on provided context.</em></p>
+</div>
+<div class="footer">
+Generated by AI Digest Agent.
+</div>
+</div>
+</body>
+</html>
