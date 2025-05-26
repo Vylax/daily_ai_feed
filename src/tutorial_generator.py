@@ -36,7 +36,7 @@ def select_tutorial_topic():
     return selected_topic
 
 # --- Prompt Definition ---
-TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent("""
+TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent(r"""
     You are an expert AI educator creating a practical, concise tutorial for a highly technical CTO (Strong Python/AI background, high IQ, familiar with ML/LLMs, time-poor) who wants deep, actionable expertise, with a focus on Google AI and related ecosystem tools (like LangGraph, Label Studio, etc.) where relevant.
 
     Generate a step-by-step tutorial in HTML format on the topic of **{topic}**.
@@ -55,10 +55,10 @@ TUTORIAL_GENERATION_PROMPT_TEMPLATE = dedent("""
 
     **CRITICAL FORMATTING INSTRUCTIONS:**
     - The *entire* output MUST be valid HTML, suitable for embedding directly into an email body.
-    - **DO NOT wrap the entire HTML output in a `<pre>`, `<code>`, or Markdown triple backtick (\`\`\`) block.** The output should start directly with the `<h2>` tag.
+    - **DO NOT wrap the entire HTML output in a `<pre>`, `<code>`, or Markdown triple backtick (```) block.** The output should start directly with the `<h2>` tag.
     - **ONLY Python code examples should be wrapped, using exactly this structure: `<pre><code class="language-python">...RAW_PYTHON_CODE_HERE...</code></pre>`.**
     - The content *inside* the `<code>` tag must be ONLY the raw Python code text. Ensure necessary HTML escaping (e.g., for `<` or `>`) is applied *within* the code content itself if needed.
-    - **DO NOT use Markdown triple backticks (\`\`\`) anywhere in the output.**
+    - **DO NOT use Markdown triple backticks (```) anywhere in the output.**
     - Use standard, clean HTML tags for text structure (e.g., `<h2>`, `<p>`, `<ul>`, `<li>`, `<strong>`).
     - Start the tutorial *immediately* with the headline: `<h2>🛠️ Skill Up Tutorial: {topic}</h2>`
 

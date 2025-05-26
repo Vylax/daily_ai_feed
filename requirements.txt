@@ -10,3 +10,4 @@ beautifulsoup4 # For potential future content extraction, good to have
 # sendgrid
 lxml # Recommended parser for beautifulsoup4
 pymdown-extensions # For code highlighting 
+pygments # For syntax highlighting in code blocks 
