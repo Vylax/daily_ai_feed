@@ -7,9 +7,19 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-# Load environment variables
+# Load environment variables (properly handle comments, empty lines, and complex values)
 if [ -f .env ]; then
-    export $(cat .env | xargs)
+    # Use a more robust method to load .env file
+    while IFS= read -r line; do
+        # Skip empty lines and comments
+        if [[ -n "$line" && ! "$line" =~ ^[[:space:]]*# ]]; then
+            # Check if line contains =
+            if [[ "$line" =~ = ]]; then
+                # Export the line as-is (this preserves quotes and complex values)
+                export "$line"
+            fi
+        fi
+    done < .env
 fi
 
 # Activate virtual environment if it exists
