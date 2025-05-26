@@ -1,0 +1,11 @@
+[Unit]
+Description=Run AI Daily Digest at 6 AM Paris time
+Requires=ai-digest.service
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+Timezone=Europe/Paris
+Persistent=true
+
+[Install]
+WantedBy=timers.target 

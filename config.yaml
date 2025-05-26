@@ -9,6 +9,10 @@ ingestion:
     "https://huggingface.co/blog/feed.xml": 15
     "http://feeds.feedburner.com/googleairesearch": 15
     "http://feeds.feedburner.com/techcrunch/ai": 15
+    "https://openai.com/blog/rss.xml": 20
+    "https://techcrunch.com/category/artificial-intelligence/feed/": 15
+    "https://venturebeat.com/category/ai/feed/": 15
+    "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml": 12
   # Optional keyword pre-filtering (leave empty or remove to disable)
   # Only keep items where title OR summary contains at least one keyword (case-insensitive)
   required_keywords:
@@ -28,17 +32,63 @@ ingestion:
     - Agent
     - Transformer
     - Diffusion
+    - Machine Learning
+    - Neural Network
+    - Computer Vision
+    - NLP
+    - Natural Language
+    - Robotics
+    - AutoML
+    - MLOps
   # List of feed URLs known to be problematic or to skip
   skip_feeds:
-    - "https://openai.com/blog/rss.xml" # Example: If consistently failing
-    # Add other known bad/permanently failing URLs here
+    # Add problematic URLs here if they consistently fail
+    - "https://research.facebook.com/feed/" # Known to return HTML instead of XML
+    - "https://syncedreview.com/feed" # Returns 301 redirect
+    - "https://towardsdatascience.com/feed/" # Returns 403 forbidden
+
+# RSS Feeds Configuration
+rss_feeds:
+  # OpenAI & AI Research Labs
+  - "https://openai.com/blog/rss.xml"
+  - "https://research.google/blog/rss/"
+  - "https://deepmind.google/discover/blog/rss.xml"
+  - "https://www.anthropic.com/news/rss"
+  - "https://huggingface.co/blog/feed.xml"
+  
+  # Tech News & AI Coverage
+  - "https://techcrunch.com/category/artificial-intelligence/feed/"
+  - "https://venturebeat.com/category/ai/feed/"
+  - "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+  - "https://www.technologyreview.com/topic/artificial-intelligence/feed/"
+  - "https://www.wired.com/feed/category/business/artificial-intelligence/latest/rss"
+  - "https://arstechnica.com/tag/artificial-intelligence/feed/"
+  
+  # Academic & Research
+  - "https://distill.pub/rss.xml"
+  - "https://arxiv.org/rss/cs.AI"
+  - "https://arxiv.org/rss/cs.LG"
+  - "https://arxiv.org/rss/cs.CL"
+  
+  # Industry & Business
+  - "https://www.artificialintelligence-news.com/feed/"
+  - "https://blog.langchain.dev/rss/"
+  - "https://wandb.ai/site/rss.xml"
+  - "https://www.kdnuggets.com/feed/"
+  - "https://machinelearningmastery.com/feed/"
+  
+  # YouTube Channels (AI/ML focused)
+  - "https://www.youtube.com/feeds/videos.xml?channel_id=UCP7jMXSY2xbc3KCAE0MHQ-A" # DeepMind
+  - "https://www.youtube.com/feeds/videos.xml?channel_id=UCrDwWp7EBBv4NwvScIpBDOA" # Google AI
+  - "https://www.youtube.com/feeds/videos.xml?channel_id=UCWN3xxRkmTPmbKwht9FuE5A" # Siraj Raval
+  - "https://www.youtube.com/feeds/videos.xml?channel_id=UC0rqucBdTuFTjJiefW5t-IQ" # Yannic Kilcher
 
 # Gemini Model Configuration
 gemini_models:
   FILTERING_MODEL: 'gemini-2.0-flash-lite' # Using user-specified model
   SUMMARIZATION_LITE_MODEL: 'gemini-2.0-flash-lite' # Using user-specified model
   ANALYSIS_MODEL: 'gemini-2.0-flash'  # Using user-specified model
-  TUTORIAL_MODEL: 'gemini-2.0-flash' # Using user-specified model
+  TUTORIAL_MODEL: 'gemini-2.5-flash-preview-05-20' # Using user-specified model
   # NOTE: Ensure these models are available in your environment/project.
 
 # Optional: Pricing per 1 Million Tokens (Input/Output) - for cost estimation
@@ -49,11 +99,19 @@ gemini_pricing:
      output: 0.30 # Fictional Example Price
   'gemini-2.0-flash':
      input: 0.10 # Fictional Example Price
-     output: 0.40 # Fictional Example Price
+     output: 0.30 # Fictional Example Price
+  'gemini-2.5-flash-preview-05-20':
+     input: 0.15 # Fictional Example Price
+     output: 3.5 # Fictional Example Price
 #   # Add other models if used
 
 # --- File Paths ---
 processed_urls_filepath: "processed_urls.json" # B.4: Path for deduplication data
 
 # --- Summarization & Analysis Settings ---
-num_news_items_to_summarize: 7 
+num_news_items_to_summarize: 7
+
+# --- Scheduling Settings ---
+run_mode: 'once'  # Set to 'once' for systemd timer scheduling
+schedule_time: "06:00"  # Not used when run_mode is 'once'
+schedule_initial_run: false  # Not used when run_mode is 'once' 

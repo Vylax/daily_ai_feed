@@ -1,0 +1,16 @@
+[Unit]
+Description=AI Daily Digest Generator
+After=network.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/c4
+Environment=TZ=Europe/Paris
+ExecStart=/bin/bash /home/ubuntu/c4/run_digest.sh
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target 
